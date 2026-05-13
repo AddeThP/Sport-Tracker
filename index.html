@@ -2,611 +2,150 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Sport Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELMA – Vertriebskarte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#080810;--s1:#10101c;--s2:#18182a;--s3:#202038;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.14);--text:#f0f0f8;--muted:#5a5a7a;--muted2:#8888aa;--green:#22c55e;--green-bg:rgba(34,197,94,.08);--red:#f87171}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
-body{overflow-x:hidden}
-#cfg-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1.25rem;text-align:center;gap:1.5rem}
-.cfg-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.05em;line-height:1}
-.cfg-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase}
-.cfg-box{width:100%;max-width:400px;background:var(--s1);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;text-align:left}
-.cfg-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem}
-.cfg-input{width:100%;padding:11px 14px;font-family:'Inter',sans-serif;font-size:14px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;margin-bottom:1rem}
-.cfg-input:focus{border-color:rgba(255,255,255,.3)}
-.cfg-input::placeholder{color:var(--muted)}
-.cfg-hint{font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:1rem}
-.cfg-btn{width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:var(--green);color:#040a06;border:none;border-radius:10px;cursor:pointer}
-.cfg-btn:hover{filter:brightness(1.1)}
-.cfg-btn:disabled{background:var(--s3);color:var(--muted);cursor:default}
-.cfg-err{font-family:'DM Mono',monospace;font-size:11px;color:var(--red);text-align:center;margin-top:.5rem}
-#login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1.25rem;gap:1.5rem}
-.login-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.05em;line-height:1;text-align:center}
-.login-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase}
-.player-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:380px}
-.player-card{padding:1.5rem 1rem;border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:all .2s;background:var(--s1);text-align:center}
-.player-card:active{transform:scale(.97)}
-.pc-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;margin:0 auto 10px;border:1.5px solid}
-.pc-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em}
-.cfg-link{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline}
-/* MODALS */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:center;justify-content:center;padding:1.5rem}
-.modal-box{background:var(--s1);border:1px solid var(--border2);border-radius:20px;padding:2rem 1.75rem;width:100%;max-width:320px;text-align:center}
-.modal-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;margin:0 auto 1rem;border:2px solid}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.04em;margin-bottom:.2rem}
-.modal-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-bottom:1.5rem;letter-spacing:.06em}
-.modal-inp{width:100%;padding:14px;font-family:'Inter',sans-serif;font-size:18px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;text-align:center;letter-spacing:.1em;margin-bottom:.75rem}
-.modal-inp:focus{border-color:rgba(255,255,255,.3)}
-.modal-btn{width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;background:var(--green);color:#040a06;border:none;border-radius:10px;cursor:pointer;margin-bottom:.75rem}
-.modal-btn:hover{filter:brightness(1.1)}
-.modal-btn.orange{background:#f97316}
-.modal-cancel{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;width:100%}
-.modal-err{font-family:'DM Mono',monospace;font-size:11px;color:var(--red);margin-top:.5rem;min-height:16px;display:block}
-/* APP */
-#app{display:none;max-width:480px;margin:0 auto;padding:.75rem 1rem 5.5rem}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0 1rem}
-.tav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;border:1.5px solid;flex-shrink:0}
-.tname{font-size:14px;font-weight:600;margin-left:8px;flex:1}
-.admin-badge{font-family:'DM Mono',monospace;font-size:9px;background:rgba(249,115,22,.15);color:#f97316;border:1px solid rgba(249,115,22,.3);border-radius:6px;padding:2px 7px;margin-left:6px;letter-spacing:.06em;display:none}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:6px;animation:pulse 2s infinite}
-.sync-dot.off{background:var(--muted);animation:none}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sw-btn{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);background:transparent;border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap}
-.duel{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:1.1rem 1.1rem .9rem;margin-bottom:1rem}
-.duel-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
-.duel-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
-.duel-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
-.scores-row{display:flex;align-items:center;gap:4px;margin-bottom:.75rem;flex-wrap:wrap;justify-content:center}
-.score-block{flex:1;text-align:center;min-width:55px}
-.sc-name{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
-.sc-pts{font-family:'Bebas Neue',sans-serif;font-size:46px;line-height:1}
-.sc-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:2px}
-.vs-txt{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);flex-shrink:0}
-.duel-bar{height:3px;border-radius:2px;background:var(--s3);overflow:hidden;margin-bottom:.65rem}
-.duel-bar-inner{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.duel-msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);text-align:center;min-height:16px}
-.slabel{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin:.9rem 0 .5rem}
-.exlist{display:flex;flex-direction:column;gap:6px}
-.exitem{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--s1);border:1px solid var(--border);border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;transition:border-color .15s,background .15s}
-.exitem:active{transform:scale(.98)}
-.exitem.done{border-color:var(--green);background:var(--green-bg)}
-.chkb{width:21px;height:21px;border-radius:5px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.exitem.done .chkb{background:var(--green);border-color:var(--green)}
-.chkb svg{opacity:0;transition:opacity .12s}
-.exitem.done .chkb svg{opacity:1}
-.exname{flex:1;font-size:14px;font-weight:500}
-.exitem.done .exname{color:var(--green)}
-.expill{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:var(--s3);padding:3px 8px;border-radius:20px}
-.exitem.done .expill{background:rgba(34,197,94,.15);color:var(--green)}
-.save-btn{width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;background:var(--green);color:#040a06;border:none;border-radius:12px;cursor:pointer;margin-top:.75rem;transition:filter .2s}
-.save-btn:hover{filter:brightness(1.1)}
-.save-btn:disabled{background:var(--s2);color:var(--muted);cursor:default;filter:none}
-.lb-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:.5rem}
-.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s1);border:1px solid var(--border);border-radius:12px}
-.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:18px;width:24px;text-align:center;flex-shrink:0}
-.lb-name{flex:1;font-size:14px;font-weight:600}
-.lb-pts{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
-.hist-row{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--s1);border:1px solid var(--border);border-radius:10px;margin-bottom:5px}
-.hist-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);white-space:nowrap;flex-shrink:0}
-.hist-body{flex:1;font-size:12px;color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.add-row{display:flex;gap:7px;margin-bottom:.75rem}
-.add-inp{flex:1;padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;background:var(--s1);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none}
-.add-inp:focus{border-color:rgba(255,255,255,.28)}
-.add-inp::placeholder{color:var(--muted)}
-.add-btn{padding:10px 13px;font-size:14px;font-weight:600;background:var(--s2);color:var(--text);border:1px solid var(--border2);border-radius:10px;cursor:pointer;white-space:nowrap}
-.add-btn:hover{background:var(--s3)}
-.mgmt-row{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--s1);border:1px solid var(--border);border-radius:10px;margin-bottom:5px}
-.mgmt-name{flex:1;font-size:14px;font-weight:500}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center}
-.del-btn:hover{color:var(--red);background:rgba(248,113,113,.1)}
-#botnav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,16,.93);border-top:1px solid var(--border);display:none;padding:.4rem .75rem calc(.4rem + env(safe-area-inset-bottom));gap:4px;backdrop-filter:blur(16px)}
-.bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border:none;background:transparent;color:var(--muted2);cursor:pointer;border-radius:10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase}
-.bn-btn.active{color:var(--text);background:var(--s3)}
-.bn-ico{font-size:17px;line-height:1}
-.tab-pane{display:none}
-.tab-pane.on{display:block}
-.empty{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-align:center;padding:2rem 0;line-height:1.7}
-.loading{display:flex;align-items:center;justify-content:center;gap:8px;padding:2rem 0;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)}
-.spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--green);color:#040a06;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;padding:10px 20px;border-radius:10px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:999}
-.toast.show{opacity:1}
-/* NU MODAL innards */
-.nu-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;text-align:left}
-.nu-inp{width:100%;padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;margin-bottom:.9rem}
-.nu-inp::placeholder{color:var(--muted)}
-.nu-inp:focus{border-color:rgba(255,255,255,.3)}
-.nu-row{display:flex;gap:8px;align-items:center;margin-bottom:.9rem}
-.nu-btns{display:flex;gap:8px;margin-top:.25rem}
-.nu-ok{flex:1;padding:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:#f97316;color:#040a06;border:none;border-radius:10px;cursor:pointer}
-.nu-no{flex:1;padding:12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--muted2);background:var(--s3);border:none;border-radius:10px;cursor:pointer}
+:root{--bg:#0d0f14;--surface:#161921;--surface2:#1e2330;--border:#2a2f3d;--text:#e8eaf0;--muted:#7a8099;--accent:#c8a84b;}
+*{margin:0;padding:0;box-sizing:border-box;
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:.08em;color:var(--accent);}
+.logo span{color:var(--muted);font-weight:400;font-size:12px;margin-left:8px;}
+.counter{font-size:12px;color:var(--muted);}
+.counter strong{color:var(--text);}
+.main{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+.sidebar-top{padding:12px;}
+.search-box{position:relative;}
+.search-box input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px 8px 32px;border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
+.search-box input:focus{border-color:var(--accent);}
+.search-box input::placeholder{color:var(--muted);}
+.s-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;}
+.filters{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:5px;}
+.fb{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1.5px solid;background:transparent;cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;color:var(--text);}
+.fd{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.fb.active{color:#fff;}
+.fb[data-c="A-Kunden"]{border-color:#0288D1;}.fb[data-c="A-Kunden"].active{background:#0288D1;}
+.fb[data-c="B-Kunden"]{border-color:#FFD600;color:#ccc;}.fb[data-c="B-Kunden"].active{background:#FFD600;color:#111;}
+.fb[data-c="C-Kunden"]{border-color:#7CB342;}.fb[data-c="C-Kunden"].active{background:#7CB342;}
+.fb[data-c="D-Kunden"]{border-color:#9C27B0;}.fb[data-c="D-Kunden"].active{background:#9C27B0;}
+.list-hd{padding:8px 12px;font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);}
+.ml{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.ml::-webkit-scrollbar{width:3px;}.ml::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.li{display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .12s;}
+.li:hover{background:var(--surface2);}
+.li.hl{background:rgba(200,168,75,.08);}
+.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lt{overflow:hidden;}
+.ln{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.la{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.no-r{padding:20px 12px;text-align:center;color:var(--muted);font-size:13px;}
+#map{flex:1;background:#1a1e2a;}
+.leaflet-popup-content-wrapper{background:var(--surface2);color:var(--text);border-radius:10px;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:'DM Sans',sans-serif;}
+.leaflet-popup-tip{background:var(--surface2);}
+.leaflet-popup-content{margin:12px 14px;min-width:180px;}
+.pc{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.pn{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;line-height:1.3;margin-bottom:5px;}
+.pa{font-size:11px;color:var(--muted);line-height:1.4;}
 </style>
 </head>
 <body>
-
-<!-- CONFIG -->
-<div id="cfg-screen">
-  <div><div class="cfg-title">SPORT<br>TRACKER</div><div class="cfg-sub" style="margin-top:.4rem">Setup — einmalig</div></div>
-  <div class="cfg-box">
-    <div class="cfg-label">Google Apps Script URL</div>
-    <input class="cfg-input" id="api-url" type="url" placeholder="https://script.google.com/macros/s/…/exec">
-    <div class="cfg-hint">Die URL aus deinem Google Apps Script einfügen. Wird lokal gespeichert.</div>
-    <button class="cfg-btn" id="cfg-save-btn" onclick="saveConfig()">Verbinden →</button>
-    <div class="cfg-err" id="cfg-err"></div>
-  </div>
-</div>
-
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-title">SPORT<br>TRACKER</div>
-  <div class="login-sub">Wer bist du?</div>
-  <div class="player-grid" id="player-grid">
-    <div class="loading" style="grid-column:1/-1"><div class="spin"></div>Laden…</div>
-  </div>
-  <span class="cfg-link" onclick="resetConfig()">⚙ API URL ändern</span>
-</div>
-
-<!-- PASSWORT MODAL (Spieler) -->
-<div class="modal-bg" id="pw-modal">
-  <div class="modal-box">
-    <div class="modal-av" id="pw-av"></div>
-    <div class="modal-title" id="pw-title"></div>
-    <div class="modal-sub">PASSWORT EINGEBEN</div>
-    <input class="modal-inp" id="pw-inp" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPw()">
-    <button class="modal-btn" onclick="checkPw()">Einloggen →</button>
-    <span class="modal-err" id="pw-err"></span>
-    <button class="modal-cancel" onclick="closeModal('pw-modal')">Abbrechen</button>
-  </div>
-</div>
-
-<!-- MASTER MODAL -->
-<div class="modal-bg" id="master-modal">
-  <div class="modal-box" style="border-color:rgba(249,115,22,.3)">
-    <div style="font-size:38px;margin-bottom:.75rem">🔐</div>
-    <div class="modal-title" style="color:#f97316">ADMIN</div>
-    <div class="modal-sub">Nur für Adde</div>
-    <input class="modal-inp" id="master-inp" type="password" placeholder="Masterpasswort" onkeydown="if(event.key==='Enter')checkMaster()" style="border-color:rgba(249,115,22,.2)">
-    <button class="modal-btn orange" onclick="checkMaster()">Entsperren →</button>
-    <span class="modal-err" id="master-err"></span>
-    <button class="modal-cancel" onclick="closeModal('master-modal')">Abbrechen</button>
-  </div>
-</div>
-
-<!-- NEUER SPIELER MODAL -->
-<div class="modal-bg" id="nu-modal">
-  <div class="modal-box" style="text-align:left">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em;color:#f97316;margin-bottom:1.25rem">Neuen Spieler</div>
-    <div class="nu-label">Name</div>
-    <input class="nu-inp" id="nu-name" type="text" placeholder="z.B. Marco">
-    <div class="nu-label">Passwort</div>
-    <input class="nu-inp" id="nu-pw" type="text" placeholder="z.B. marco123">
-    <div class="nu-label">Farbe</div>
-    <div class="nu-row">
-      <input type="color" id="nu-color" value="#22c55e" style="width:42px;height:42px;border:1px solid var(--border2);border-radius:8px;background:var(--s2);cursor:pointer;padding:3px">
-      <span style="font-size:13px;color:var(--muted2)">Spielerfarbe wählen</span>
-    </div>
-    <div class="nu-btns">
-      <button class="nu-no" onclick="closeModal('nu-modal')">Abbrechen</button>
-      <button class="nu-ok" onclick="confirmAddUser()">Hinzufügen →</button>
-    </div>
-  </div>
-</div>
-
-<!-- APP -->
-<div id="app">
-  <div class="topbar">
-    <div style="display:flex;align-items:center;flex:1;overflow:hidden">
-      <div class="tav" id="tav"></div>
-      <span class="tname" id="tname"></span>
-      <span class="admin-badge" id="admin-badge">ADMIN</span>
-      <span class="sync-dot" id="sync-dot"></span>
-    </div>
-    <button class="sw-btn" onclick="doLogout()">Wechseln</button>
-  </div>
-
-  <!-- HEUTE -->
-  <div class="tab-pane on" id="pane-today">
-    <div class="duel">
-      <div class="duel-hdr">
-        <span class="duel-lbl">Heute</span>
-        <span class="duel-date" id="duel-date"></span>
-      </div>
-      <div class="scores-row" id="scores-row"><div class="loading"><div class="spin"></div></div></div>
-      <div class="duel-bar"><div class="duel-bar-inner" id="duel-bar" style="width:50%"></div></div>
-      <div class="duel-msg" id="duel-msg">Lade…</div>
-    </div>
-    <div class="slabel">Deine Übungen</div>
-    <div class="exlist" id="exlist"><div class="loading"><div class="spin"></div>Laden…</div></div>
-    <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>Sätze speichern →</button>
-  </div>
-
-  <!-- RANGLISTE -->
-  <div class="tab-pane" id="pane-board">
-    <div class="slabel" style="margin-top:.5rem">Gesamtrangliste</div>
-    <div class="lb-wrap" id="lb-list"></div>
-    <div class="slabel">Verlauf</div>
-    <div id="hist-list"></div>
-  </div>
-
-  <!-- VERWALTEN -->
-  <div class="tab-pane" id="pane-manage">
-    <div id="manage-locked">
-      <div style="text-align:center;padding:3rem 1rem">
-        <div style="font-size:48px;margin-bottom:1rem">🔒</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;margin-bottom:.5rem">Admin Bereich</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);margin-bottom:1.5rem">Nur für Adde zugänglich</div>
-        <button onclick="openMasterModal()" style="padding:13px 28px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:#f97316;color:#040a06;border:none;border-radius:12px;cursor:pointer">Mit Masterpasswort entsperren</button>
+<header>
+  <div class="logo">ELMA <span>Vertriebskarte</span></div>
+  <div class="counter"><strong id="vc">0</strong> / <strong id="tc">0</strong> Kunden</div>
+</header>
+<div class="main">
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <div class="search-box">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="si" placeholder="Name oder Ort suchen…">
       </div>
     </div>
-    <div id="manage-unlocked" style="display:none">
-      <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f97316;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:10px;padding:10px 14px;margin-bottom:1rem;line-height:1.6">🔐 Admin-Modus aktiv</div>
-      <div class="slabel" style="margin-top:0">Übung hinzufügen</div>
-      <div class="add-row">
-        <input class="add-inp" id="new-ex" placeholder="z.B. Liegestütze (30 Stück)" onkeydown="if(event.key==='Enter')addExercise()">
-        <button class="add-btn" onclick="addExercise()">+ Add</button>
-      </div>
-      <div id="ex-manage-list"></div>
-      <div class="slabel" style="margin-top:1.5rem">Spieler hinzufügen</div>
-      <button onclick="openNuModal()" style="width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:var(--s2);color:#f97316;border:1px solid rgba(249,115,22,.3);border-radius:12px;cursor:pointer;margin-bottom:1rem">+ Neuen Spieler anlegen</button>
-      <div id="user-manage-list"></div>
-      <button onclick="lockAdmin()" style="width:100%;margin-top:1.5rem;padding:11px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);background:transparent;border:1px solid var(--border);border-radius:10px;cursor:pointer">🔒 Admin-Modus beenden</button>
+    <div class="filters">
+      <button class="fb active" data-c="A-Kunden"><span class="fd" style="background:#0288D1"></span>A-Kunden</button>
+      <button class="fb active" data-c="B-Kunden"><span class="fd" style="background:#FFD600"></span>B-Kunden</button>
+      <button class="fb active" data-c="C-Kunden"><span class="fd" style="background:#7CB342"></span>C-Kunden</button>
+      <button class="fb active" data-c="D-Kunden"><span class="fd" style="background:#9C27B0"></span>D-Kunden</button>
     </div>
+    <div class="list-hd" id="lhd">Alle Kunden</div>
+    <div class="ml" id="ml"></div>
   </div>
+  <div id="map"></div>
 </div>
-
-<div id="botnav">
-  <button class="bn-btn active" id="nav-today" onclick="showTab('today')"><span class="bn-ico">⚡</span>Heute</button>
-  <button class="bn-btn" id="nav-board" onclick="showTab('board')"><span class="bn-ico">🏆</span>Rangliste</button>
-  <button class="bn-btn" id="nav-manage" onclick="showTab('manage')"><span class="bn-ico">🔒</span>Verwalten</button>
-</div>
-<div class="toast" id="toast"></div>
-
 <script>
-// ── Passwörter ──
-const MASTER = 'Dampflion2026';
-const PWS = { 'Adde':'Dampflion2026', 'Niklas':'niklas', 'Kathleen':'kathleen' };
-const PPT = 2;
+const DATA=[{"name":"SLIM Merseburg GmbH","address":"August-Bebel-Str. 1 06217 Merseburg","category":"A-Kunden","color":"#0288D1","lat":51.35,"lon":11.9833},{"name":"Südzucker AG","address":"Albrechtstr. 54 06712 Zeitz","category":"A-Kunden","color":"#0288D1","lat":51.05,"lon":12.1333},{"name":"Progroup Paper PM3 GmbH","address":"Auf der Sonnenseite 3 06792 Sandersdorf-Brehna","category":"A-Kunden","color":"#0288D1","lat":51.5667,"lon":12.2167},{"name":"Deutsche Asphalt GmbH","address":"06237 Leuna  OT Kötschlitz","category":"A-Kunden","color":"#0288D1","lat":51.3,"lon":12.0167},{"name":"PreZero Energy Zorbau GmbH","address":"Bayerische Str. 20 06686 Lützen OT Zorbau","category":"A-Kunden","color":"#0288D1","lat":51.25,"lon":12.1167},{"name":"Wepa Leuna GmbH","address":"An der B91 / Alter Maienweg 06237 Leuna","category":"A-Kunden","color":"#0288D1","lat":51.3,"lon":12.0167},{"name":"Allerstedter Käserei","address":"Am Baumgarten 9 06642 Kaiserpfalz  OT Wohlmirstedt","category":"A-Kunden","color":"#0288D1","lat":51.2833,"lon":11.7167},{"name":"Kingspan Mineral Insulation Gmbh","address":"Paitzdorfer Straße 62 07580 Ronneburg","category":"A-Kunden","color":"#0288D1","lat":50.8667,"lon":12.2167},{"name":"RADICI CHIMICA","address":"Dr.-Bergius-Str. 6 06729 Tröglitz","category":"A-Kunden","color":"#0288D1","lat":51.1,"lon":12.0667},{"name":"CWK Chemiewerk Bad Köstritz GmbH","address":"Heinrichshall 2 07586 Bad Köstritz","category":"A-Kunden","color":"#0288D1","lat":50.9167,"lon":12.0333},{"name":"Sinnack Backspezialitäten GmbH & Co.KG","address":"Gewerbegebiet an der B2 06712 Gutenborn","category":"A-Kunden","color":"#0288D1","lat":51.05,"lon":12.1333},{"name":"GfKK  (Betreuen Kaufland in Unterkaka und arbeiten daher mit uns)","address":"Kirchweg 3 06721 Meineweh","category":"B-Kunden","color":"#FFD600","lat":51.0833,"lon":12.1},{"name":"Mitteldeutsches Paraffinwerk GmbH","address":"06679 Hohenmölsen  OT Webau","category":"B-Kunden","color":"#FFD600","lat":51.1833,"lon":12.0667},{"name":"Mibrag mbH","address":"Glück-Auf-Str. 1 06711 Zeitz","category":"B-Kunden","color":"#FFD600","lat":51.0667,"lon":12.1333},{"name":"Interstarch GmbH","address":"Dr. von Linde Str. 1 06729 Elsteraue OT Alttröglitz","category":"B-Kunden","color":"#FFD600","lat":51.1,"lon":12.0667},{"name":"Rotkäppchen-Mumm","address":"Sektkellereistr. 5 06632 Freyburg","category":"B-Kunden","color":"#FFD600","lat":51.2,"lon":11.7833},{"name":"URSA Deutschland GmbH","address":"Uralitastr. 1 06188 Queis","category":"B-Kunden","color":"#FFD600","lat":51.5167,"lon":11.9833},{"name":"MBW Mitteldeutsches Bitumenwerk","address":"Am Bahnhof Webau 1 06679 Hohenmölsen","category":"B-Kunden","color":"#FFD600","lat":51.1833,"lon":12.0667},{"name":"BEB Burgenland Ersatzbrennstoff GmbH","address":"Am Alten Tagebau 3 06268 Steigra","category":"B-Kunden","color":"#FFD600","lat":51.5,"lon":11.8333},{"name":"Zech Umwelt GmbH","address":"Altenburger Str. 29 04617 Kriebitzsch","category":"B-Kunden","color":"#FFD600","lat":51.0667,"lon":12.45},{"name":"Schwarz Produktion GmbH & Co. KG MEG Leißling GmbH","address":"Am Frauenholze 2 06667 Leißling","category":"B-Kunden","color":"#FFD600","lat":51.2,"lon":11.9667},{"name":"Schüco International KG","address":"Am Frauenholze 2 06667 Weißenfels","category":"B-Kunden","color":"#FFD600","lat":51.2,"lon":11.9667},{"name":"Eurowell GmbH","address":"Hallesche Str. 37 06686 Lützen OT Zorbau","category":"B-Kunden","color":"#FFD600","lat":51.25,"lon":12.1167},{"name":"frischli-Milchwerke","address":"Tagewerbener Straße 81 06667 Weißenfels","category":"B-Kunden","color":"#FFD600","lat":51.2,"lon":11.9667},{"name":"GEALAN Fenster-Systeme GmbH","address":"Gewerbegebiet Kapelle/Nord 23 ·  07922  Tanna","category":"B-Kunden","color":"#FFD600","lat":50.5333,"lon":11.7},{"name":"Merseburger Verpackung GmbH","address":"Geusaer Straße  -Am Chemie-Muesum 06217 Merseburg","category":"B-Kunden","color":"#FFD600","lat":51.35,"lon":11.9833},{"name":"PURALUBE GmbH","address":"Hauptstr. 30 06729 Elsteraue  OT Alttröglitz","category":"B-Kunden","color":"#FFD600","lat":51.1,"lon":12.0667},{"name":"JOWAT","address":"Dr.-Pier-Str. 1/ Ecke Jowatstr. 06729 Elsteraue","category":"B-Kunden","color":"#FFD600","lat":51.1,"lon":12.0667},{"name":"CropEnergies Bioehtanol GmbH","address":"Albrechtstr. 54 06712 Zeitz","category":"B-Kunden","color":"#FFD600","lat":51.05,"lon":12.1333},{"name":"MUEG","address":"Geiseltalstr. 1 06242 Braunsbedra","category":"B-Kunden","color":"#FFD600","lat":51.2667,"lon":11.9},{"name":"Stärkefabrik Zeitz","address":"Albrechtstr. 54 06712 Zeitz","category":"B-Kunden","color":"#FFD600","lat":51.05,"lon":12.1333},{"name":"Temca GmbH & Co. KG","address":"Gewerbegebiet 4 07554 Pölzig","category":"C-Kunden","color":"#7CB342","lat":50.8833,"lon":12.0833},{"name":"HTR Heilbronner Tankreinigung GmbH","address":"Alte Werkstraße 4 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"Amazon Distribution GmbH","address":"Am Steingarten 2 07554 Gera","category":"C-Kunden","color":"#7CB342","lat":50.8833,"lon":12.0833},{"name":"CT Biocarbonic GmbH","address":"Albrechtstr. 54 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"PVS GmbH","address":"An der Mölbiser Landstraße 3 04571 Rötha","category":"C-Kunden","color":"#7CB342","lat":51.1667,"lon":12.4667},{"name":"ZGG Zeitzer Guss GmbH","address":"Naumburger Str. 52 06712 Zeitz / Elster","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"Danpower Pelletproduktion GmbH","address":"Mühlenstraße 2 06721 Osterfeld/Roda","category":"C-Kunden","color":"#7CB342","lat":51.0833,"lon":12.1},{"name":"Wasserkraftwerk Bad Köstritz","address":"Heinrich-Schütz-Straße 20a 07586 Bad Köstritz","category":"C-Kunden","color":"#7CB342","lat":50.9167,"lon":12.0333},{"name":"Sächsische Schloßfabrik GmbH","address":"Am Pappelhain 10 04539 Groitzsch","category":"C-Kunden","color":"#7CB342","lat":51.15,"lon":12.3833},{"name":"KSB Service GmbH Schwedt","address":"Dr.-Engler-Str. 16 06729 Elsteraue OT Tröglitz","category":"C-Kunden","color":"#7CB342","lat":51.1,"lon":12.0667},{"name":"VIAM Europe GmbH","address":"Altenburger Str. 7 04610 Meuselwitz","category":"C-Kunden","color":"#7CB342","lat":51.0333,"lon":12.35},{"name":"Infra-Zeitz","address":"Hauptstr. 30 06729 Elsteraue","category":"C-Kunden","color":"#7CB342","lat":51.1,"lon":12.0667},{"name":"BHG Nessa","address":"Industriegebiet Obernessa,  Elmeweg 3 06682 Teuchern","category":"C-Kunden","color":"#7CB342","lat":51.15,"lon":11.9833},{"name":"Gefo Folienbetrieb GmbH","address":"Ernst-M.-Jahr-Str. 10 07552 Gera","category":"C-Kunden","color":"#7CB342","lat":50.8833,"lon":12.0833},{"name":"Smart Press Shop GmbH&Co.KG","address":"Polarisstr. 3 06116 Halle/Saale","category":"C-Kunden","color":"#7CB342","lat":51.5167,"lon":11.9167},{"name":"Joma","address":"Cretzschwitz Nr. 31 07554 Gera","category":"C-Kunden","color":"#7CB342","lat":50.8833,"lon":12.0833},{"name":"FOLIEtec","address":"Am Schlifter 7 06571 Roßleben-Wiehe","category":"C-Kunden","color":"#7CB342","lat":51.3833,"lon":11.5667},{"name":"ARE Deutzen","address":"Fabrikstraße 7 04575 Neukieritzsch","category":"C-Kunden","color":"#7CB342","lat":51.2167,"lon":12.3667},{"name":"Griesson De Beukelaer","address":"Im Camisch 1 07768 Kahla","category":"C-Kunden","color":"#7CB342","lat":50.8167,"lon":11.55},{"name":"Münzing Micro Technologies GmbH","address":"Dr.- Bergius-Str. 18-22 06729 Elsteraue","category":"C-Kunden","color":"#7CB342","lat":51.1,"lon":12.0667},{"name":"Schulz& Berger Luft- und Verfahrenstechnik GmbH","address":"Zschernitzer Str. 74 04600 Altenburg","category":"C-Kunden","color":"#7CB342","lat":50.9833,"lon":12.45},{"name":"SONOCO Consumer Products Zwenkau GmbH","address":"Spenglerallee 18-22 04442 Zwenkau","category":"C-Kunden","color":"#7CB342","lat":51.2167,"lon":12.3167},{"name":"DB InfraGO AG","address":"Tiergartenstraße 5c 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"Abwasserbeseitigung","address":"Am Bad 9  06667 Weißenfels / Saale","category":"C-Kunden","color":"#7CB342","lat":51.2,"lon":11.9667},{"name":"GeraTec GmbH & Co.KG","address":"Heinrich-Hertz-Str. 28 07552 Gera","category":"C-Kunden","color":"#7CB342","lat":50.8833,"lon":12.0833},{"name":"Elektromotor & Technik Vertrieb  und Service GmbH","address":"Friedrichstr. 14a 09380 Thalheim","category":"C-Kunden","color":"#7CB342","lat":50.7167,"lon":12.8667},{"name":"WEV Westsächsische Entsorgungs-u, Ver.","address":"Am Westufer 3 04463 Großpösna  OT Strömthal","category":"C-Kunden","color":"#7CB342","lat":51.2833,"lon":12.5},{"name":"De Laval - Agrardienste Dr. Langner GmbH","address":"Flurstraße 19 04779 Wermsdorf","category":"C-Kunden","color":"#7CB342","lat":51.3,"lon":12.9667},{"name":"Altenburger Kraftfutterwek und Getreideh","address":"Remsauer Str. 17-19 04600 Altenburg / Thür","category":"C-Kunden","color":"#7CB342","lat":50.9833,"lon":12.45},{"name":"Chefs Culinar Ost GmbH & Co. KG","address":"Patterken 2 06686 Lützen  OT Zorbau","category":"C-Kunden","color":"#7CB342","lat":51.25,"lon":12.1167},{"name":"Stachowski GmbH","address":"Gewerbegebiet 6 06682 Teuchern   OT Prittitz","category":"C-Kunden","color":"#7CB342","lat":51.15,"lon":11.9833},{"name":"PFT Holz in Form","address":"Südring 7 06618 Mertendorf","category":"C-Kunden","color":"#7CB342","lat":51.1667,"lon":11.8167},{"name":"Globus Handelshof St.Wendel","address":"Zeitzer Str. 39 06711 Zeitz  OT Theißen","category":"C-Kunden","color":"#7CB342","lat":51.0667,"lon":12.1333},{"name":"Gestaguss GEW","address":"Bahnhofsplatz 3 06722 Wetterzeuba","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1},{"name":"Aryzta Bakeries Deutschland GmbH","address":"Industriestr. 4 06295 Lutherstadt Eisleben","category":"C-Kunden","color":"#7CB342","lat":51.5333,"lon":11.5333},{"name":"Bagel Bakery GmbH","address":"Gewerbegebiet an der B2 06712 Gutenborn-Droßdorf","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"Backhaus Hennig GmbH","address":"Schmiedeweg 1 04442 Zwenkau","category":"C-Kunden","color":"#7CB342","lat":51.2167,"lon":12.3167},{"name":"Thiele Glas","address":"Glasstraße 1 04779 Wermsdorf","category":"C-Kunden","color":"#7CB342","lat":51.3,"lon":12.9667},{"name":"Agrial Deutschland GmbH & Co. KG","address":"Theo Nebe Strasse 1 04626 Schmölln","category":"C-Kunden","color":"#7CB342","lat":50.9167,"lon":12.5333},{"name":"Klinikum Altenburger Land GmbH","address":"04600 Altenburg","category":"C-Kunden","color":"#7CB342","lat":50.9833,"lon":12.45},{"name":"Udi Biogas 3 GmbH & Co.KG","address":"Promenadenstr. 3 09111 Chemnitz","category":"C-Kunden","color":"#7CB342","lat":50.8333,"lon":12.9167},{"name":"Wienerberger GmbH","address":"Jenaer Str. 56 07607 Eisenberg / Thür","category":"C-Kunden","color":"#7CB342","lat":50.9833,"lon":11.9},{"name":"NILOS Förderband GmbH","address":"Straße zur Freiheit 06729 Elsteraue / Profen","category":"C-Kunden","color":"#7CB342","lat":51.1,"lon":12.0667},{"name":"QSIL Metals Hermsdorf GmbH","address":"Robert Friese Strasse 4 07629 Hermsdorf","category":"C-Kunden","color":"#7CB342","lat":50.85,"lon":11.8667},{"name":"EMS Solbrig","address":"Fr.-Staude-Str. 57 08060 Zwickau","category":"C-Kunden","color":"#7CB342","lat":50.7167,"lon":12.5},{"name":"SSBZ Stadtreinigung- und Service-","address":"Am Herrmanschacht 11 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"J. Raab GmbH","address":"Am Bahnhof 06711 Zeitz OT Luckenau","category":"C-Kunden","color":"#7CB342","lat":51.0667,"lon":12.1333},{"name":"ADG Lützen-Dölzig GmbH","address":"06686 Lützen-Dölzig","category":"C-Kunden","color":"#7CB342","lat":51.25,"lon":12.1167},{"name":"Agrar GmbH Auligk","address":"Gatzen 50 04539 Groitzsch b Pegau","category":"C-Kunden","color":"#7CB342","lat":51.15,"lon":12.3833},{"name":"Hollfelder -Gühring GmbH","address":"Patterken 3 06686 Lützen  OT Zorbau","category":"C-Kunden","color":"#7CB342","lat":51.25,"lon":12.1167},{"name":"Gut Meineweh GbR","address":"Eisenberger Str. 1 06721 Meineweh","category":"C-Kunden","color":"#7CB342","lat":51.0833,"lon":12.1},{"name":"Vantage Leuna GmbH (Spezialchemikalien)","address":"Am Haupttor 7302 06237 Leuna","category":"C-Kunden","color":"#7CB342","lat":51.3,"lon":12.0167},{"name":"Peters und Peters GbR","address":"Altenburger Straße 50 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"Weber Industrieller Rohrleitungsbau & An","address":"Dr.-Engler-Str. 16 06729 Elsteraue / Tröglitz","category":"C-Kunden","color":"#7CB342","lat":51.1,"lon":12.0667},{"name":"Stadt Zeitz - Der Oberbürgermeister","address":"Altmarkt 1 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"LEG Lucka Eisenguß GmbH","address":"Industriepark Nord 04610 Meuselwitz / Thür","category":"C-Kunden","color":"#7CB342","lat":51.0333,"lon":12.35},{"name":"Naundorfer Agragenossenschaft e.G.","address":"","category":"D-Kunden","color":"#9C27B0","lat":null,"lon":null},{"name":"Meuselwitz Guss","address":"Industriepark Nord 04610 Meuselwitz","category":"C-Kunden","color":"#7CB342","lat":51.0333,"lon":12.35},{"name":"Goldeck Süßwaren GmbH (Zetti)","address":"Am Güterbahnhof 1 06712 Zeitz","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"Agricola","address":"Techwitzer Straße 16 06729 Elsteraue OT Rehmsdorf","category":"C-Kunden","color":"#7CB342","lat":51.1,"lon":12.0667},{"name":"ELMA GmbH Naumburg","address":"Roßbacher Straße 11 06618 Naumburg","category":"C-Kunden","color":"#7CB342","lat":51.1667,"lon":11.8167},{"name":"LeRo Food GmbH & Co. KG","address":"Berndorf 42 04539  Groitzsch","category":"C-Kunden","color":"#7CB342","lat":51.15,"lon":12.3833},{"name":"Bausanierung Bernd Krämer","address":"","category":"D-Kunden","color":"#9C27B0","lat":null,"lon":null},{"name":"Matthei Leitungsbau GmbH","address":"An der Quarzitgrube 2 06688 Weißenfels","category":"C-Kunden","color":"#7CB342","lat":51.2167,"lon":11.95},{"name":"Biogas Nessa GmbH","address":"Weg nach Rössuln 1 06682 Teuchern","category":"C-Kunden","color":"#7CB342","lat":51.15,"lon":11.9833},{"name":"Kriegel Metallbau GmbH","address":"Gladitzer Weg 3 06712 Kretzschau","category":"C-Kunden","color":"#7CB342","lat":51.05,"lon":12.1333},{"name":"MWT","address":"Bahnhofstr. 31 07607 Eisenberg / Thür","category":"C-Kunden","color":"#7CB342","lat":50.9833,"lon":11.9},{"name":"Stadt Zeitz FB Recht & Ordnung","address":"","category":"D-Kunden","color":"#9C27B0","lat":null,"lon":null},{"name":"Käserei Altenburger","address":"Theo-Nebe-Str. 1 04626 Lumpzig  OT Hartha","category":"C-Kunden","color":"#7CB342","lat":50.9167,"lon":12.5333},{"name":"TSR Deutschland GmbH&Co. KG","address":"Äußere Radeweller Str. 2 06132 Halle/Saale","category":"C-Kunden","color":"#7CB342","lat":51.4333,"lon":12.0},{"name":"Altenburger Destillerie G. Winkelhausen GmbH","address":"04600 Altenburg","category":"D-Kunden","color":"#9C27B0","lat":50.9833,"lon":12.45},{"name":"SANIT Eisenberg","address":"Gewerbegebiet -  In den Wiesen 8 07607 Eisenberg","category":"D-Kunden","color":"#9C27B0","lat":50.9833,"lon":11.9},{"name":"Maschinenfabrik Herkules Meuselwitz GmbH","address":"Industriepark Nord 04610 Meuselwitz","category":"D-Kunden","color":"#9C27B0","lat":51.0333,"lon":12.35},{"name":"Köstritzer Schwarzbier GmbH","address":"Heinrich- Schütz-Straße 16 07586 Bad   Köstritz","category":"D-Kunden","color":"#9C27B0","lat":50.9167,"lon":12.0333},{"name":"Kaeser Kompressoren GmbH","address":"Leibnitzstrasse 65 07548 Gera","category":"D-Kunden","color":"#9C27B0","lat":50.8833,"lon":12.0833},{"name":"Kaufland Osterfeld Fleisch","address":"Kirchweg 3,  06721  Meineweh","category":"D-Kunden","color":"#9C27B0","lat":51.0833,"lon":12.1},{"name":"Friweika eG","address":"Lippran diser Strasse 27 08373 Remse","category":"D-Kunden","color":"#9C27B0","lat":50.7833,"lon":12.6333},{"name":"ZWE Eisenberg","address":"Teichstraße 16 07607 Eisenberg","category":"D-Kunden","color":"#9C27B0","lat":50.9833,"lon":11.9},{"name":"Stahlo","address":"Rudolf Loh Strasse 1 07546 Gera","category":"D-Kunden","color":"#9C27B0","lat":50.8833,"lon":12.0833},{"name":"Getzner","address":"Am Flugplatz 1 07546 Gera","category":"D-Kunden","color":"#9C27B0","lat":50.8833,"lon":12.0833},{"name":"Lidl Logistik","address":"Am Flugplatz 8 07546 Gera","category":"D-Kunden","color":"#9C27B0","lat":50.8833,"lon":12.0833},{"name":"Tönnies Zerlegebetrieb GmbH","address":"Am Schlachthof 1, 06667 Weißenfels","category":"D-Kunden","color":"#9C27B0","lat":51.2,"lon":11.9667},{"name":"Enovis Mathys Orthopädie GmbH","address":"An den Trillers Büschen 2,  07646  Mörsdorf","category":"D-Kunden","color":"#9C27B0","lat":50.8667,"lon":11.6833},{"name":"Bauerfeind AG","address":"Triebeser Str. 16 07937 Zeulen roda Triebes","category":"D-Kunden","color":"#9C27B0","lat":50.6333,"lon":11.9833},{"name":"BAP Boysen","address":"Friedrich-Boysen-Straße 1,  08527 Plauen Plauen","category":"D-Kunden","color":"#9C27B0","lat":50.5,"lon":12.1167},{"name":"Horsch","address":"Am Horsch Werk 8 · 07580 Ronneburg 07580 Ronneburg","category":"D-Kunden","color":"#9C27B0","lat":50.8667,"lon":12.2167},{"name":"UTR Umformtechnik","address":"Kitscherstr. 55 /57 · 08451 Crimmitschau  08451 Crimmitschau","category":"D-Kunden","color":"#9C27B0","lat":50.8167,"lon":12.3833},{"name":"Goldmännchen","address":"An d. Tesse 1,  07629  St. Gangloff","category":"D-Kunden","color":"#9C27B0","lat":50.85,"lon":11.8667},{"name":"Breckle","address":"Str. am Wendehammer 2, 07570 Weida 07570  Weida","category":"D-Kunden","color":"#9C27B0","lat":50.7833,"lon":12.0167},{"name":"Jass Schwarza","address":"Breitscheidstraße 143,  07407  Rudolstadt","category":"D-Kunden","color":"#9C27B0","lat":50.7167,"lon":11.3333},{"name":"Kaufland Osterfeld Automatisierung  / Logistik","address":"Kirchweg 3,  06721  Meineweh","category":"D-Kunden","color":"#9C27B0","lat":51.0833,"lon":12.1},{"name":"Barat Forge Aluminium Technik","address":"Berthelsdorfer Str. 8, 09618 Brand-Erbisdorf  09618  Brand-Erbisdorf","category":"D-Kunden","color":"#9C27B0","lat":50.8333,"lon":13.35},{"name":"Berndt Bio Energy GmbH","address":"Geraer Strasse 10  07980 Berga -Wünschendorf","category":"D-Kunden","color":"#9C27B0","lat":50.65,"lon":12.0667},{"name":"POLIFILM EXTRUSION GmbH","address":"Köthener Str. 11,  06369  Weißandt-Gölzau","category":"D-Kunden","color":"#9C27B0","lat":51.6667,"lon":12.1},{"name":"Gugelfuss","address":"Neue Str. 2,  04626  Löbichau","category":"D-Kunden","color":"#9C27B0","lat":50.9167,"lon":12.5333},{"name":"CATL (Contemporary Amperex  Technology Thuringia SE)","address":"Robert-Bosch-Straße 1, 99310 Arnstadt 99310   Arns tadt","category":"D-Kunden","color":"#9C27B0","lat":51.0,"lon":10.9667},{"name":"Tami Deutschland GmbH","address":"Heinrich-Hertz-Straße 2-4,  07629  Herm sdorf","category":"D-Kunden","color":"#9C27B0","lat":50.85,"lon":11.8667},{"name":"Tridelta Weichferrite GmbH","address":"Robert-Friese-Straße 8-10,  07629  Hermsdorf","category":"D-Kunden","color":"#9C27B0","lat":50.85,"lon":11.8667},{"name":"Schmitz Cargobull Gotha","address":"Kindleber Str. 99,  99867  Gotha","category":"D-Kunden","color":"#9C27B0","lat":50.95,"lon":10.7333},{"name":"LEAG Lausitz Energie Kraftwerke AG  - Kraftwerk Lippendorf","address":"Hauptstraße 200,  04575  Neukieritzsch","category":"D-Kunden","color":"#9C27B0","lat":51.2167,"lon":12.3667},{"name":"FRoSTA AG Werk Lommatzsch","address":"Messaer Straße 3 - 5 01623  Lommatzsch","category":"D-Kunden","color":"#9C27B0","lat":51.2167,"lon":13.3},{"name":"Meleghy Automotive GmbH & Co. KG  - Werk Gera","address":"Rudolf-Loh-straße 1,  07546  Gera","category":"D-Kunden","color":"#9C27B0","lat":50.8833,"lon":12.0833},{"name":"POG Präzisionsoptik Gera GmbH","address":"Alte Str. 3 , 04626  Löbichau","category":"D-Kunden","color":"#9C27B0","lat":50.9167,"lon":12.5333},{"name":"Siltronic AG - Werk Freiberg","address":"Berthelsdorfer Str. 113,  09599  Freiberg","category":"D-Kunden","color":"#9C27B0","lat":50.9167,"lon":13.3333},{"name":"Otto Bock Mobility Solutions GmbH","address":"Lindenstraße 13 07426  Königsee","category":"D-Kunden","color":"#9C27B0","lat":50.6667,"lon":11.15},{"name":"DIHAG Holding GmbH","address":"Arnheimer Straße 142 40489  Düsseldorf","category":"D-Kunden","color":"#9C27B0","lat":51.3167,"lon":6.7833},{"name":"Stahlwerk Thüringen GmbH","address":"Kronacher Str. 6, 07333 Unterwellenborn 07333 Unterwellenborn Unterwellenborn","category":"D-Kunden","color":"#9C27B0","lat":50.6667,"lon":11.4833},{"name":"MVV Trea Leuna","address":"Am Haupttor 1216 06237  Leuna","category":"D-Kunden","color":"#9C27B0","lat":51.3,"lon":12.0167},{"name":"Knauf Gips KG","address":"Hauptstraße 1,  06258  Schkopau","category":"D-Kunden","color":"#9C27B0","lat":51.3833,"lon":12.0333},{"name":"Etex Building Performance GmbH Siniat-Werk Lippendorf","address":"Industriestraße 1,  04564  Böhlen","category":"D-Kunden","color":"#9C27B0","lat":51.1833,"lon":12.35},{"name":"VERBIO Zörbig GmbH","address":"Thura Mark 20 06780  Zörbig","category":"D-Kunden","color":"#9C27B0","lat":51.6167,"lon":12.0833},{"name":"VERBIO Bitterfeld GmbH","address":"Westliche Stickstoffstraße 3,  06803  Bitterfeld-Wolfen","category":"D-Kunden","color":"#9C27B0","lat":51.6167,"lon":12.2667},{"name":"REHAU Industries SE & Co. KG","address":"Im Kälbertale 1,  07819  Triptis","category":"D-Kunden","color":"#9C27B0","lat":50.6833,"lon":11.8333},{"name":"PVP Triptis GmbH","address":"Im Bresselsholze 11,  07819  Triptis","category":"D-Kunden","color":"#9C27B0","lat":50.6833,"lon":11.8333},{"name":"FKT Formenbau und Kunststofftechnik  GmbH","address":"Jahnstraße 2,  07819  Triptis","category":"D-Kunden","color":"#9C27B0","lat":50.6833,"lon":11.8333},{"name":"Docter Optics SE","address":"Mittelweg 29 , 07806  Neustadt an der Orla","category":"D-Kunden","color":"#9C27B0","lat":50.7333,"lon":11.7667},{"name":"Herdoor Türelemente GmbH & Co. KG","address":"Zum Mühlenberg 4,  07806  Neustadt an der Orla","category":"D-Kunden","color":"#9C27B0","lat":50.7333,"lon":11.7667},{"name":"Burkhardt Feinkostwerke GmbH","address":"Industriering 16 , 04626  Schmölln","category":"D-Kunden","color":"#9C27B0","lat":50.9167,"lon":12.5333},{"name":"Sachsenmilch Leppersdorf GmbH","address":"An den Breiten, 01454 Wachau , 01454  Wachau","category":"D-Kunden","color":"#9C27B0","lat":51.2833,"lon":13.9167},{"name":"Kronoflooring GmbH","address":"Mühlbacher Str. 1  01561  Lampertswalde","category":"D-Kunden","color":"#9C27B0","lat":51.4167,"lon":13.5833},{"name":"Mannesmannröhren-Werk GmbH","address":"Mannesmannstraße 11,  01619  Zeithain","category":"D-Kunden","color":"#9C27B0","lat":51.35,"lon":13.3167},{"name":"HABA-Beton Johann Bartlechner KG","address":"Pomßener Landstraße 2,  04668  Parthenstein","category":"D-Kunden","color":"#9C27B0","lat":51.3,"lon":12.6833},{"name":"KÖHRA - Frische GmbH","address":"Leipziger Str. 32,  04683  Belgershain","category":"D-Kunden","color":"#9C27B0","lat":51.2333,"lon":12.5667},{"name":"Westsächsische Entsorgungs- u.  Verwertungsgesellschaft mbH","address":"Am Westufer 3,  04463  Großpösna","category":"D-Kunden","color":"#9C27B0","lat":51.2833,"lon":12.5},{"name":"ALSTOM Transportation Germany GmbH","address":"Am Rathenaupark / Door 2 16761  Dresden","category":"D-Kunden","color":"#9C27B0","lat":52.5833,"lon":13.1333},{"name":"Birkenstock Productions Sachsen GmbH","address":"Gewerbegebiet Ebersbach, Gewerbering 8,  02828  Görlitz","category":"D-Kunden","color":"#9C27B0","lat":51.15,"lon":14.9833},{"name":"Röckelein KG","address":"Meineweher Weg 9,  06721  Osterfeld","category":"D-Kunden","color":"#9C27B0","lat":51.0833,"lon":12.1},{"name":"Tallag Saalfeld GmbH","address":"Hüttenstraße 21,  07318  Saalfeld/Saale","category":"D-Kunden","color":"#9C27B0","lat":50.65,"lon":11.3667},{"name":"Ospelt Food Establishment  Zweigniederlassung Apolda","address":"Über dem Dieterstedter Bache 14,  99510 Apolda Apolda","category":"D-Kunden","color":"#9C27B0","lat":51.0,"lon":11.5167},{"name":"Viega GmbH & Co. KG Werk Großheringen","address":"Viegastraße 1,  99518  Großheringen","category":"D-Kunden","color":"#9C27B0","lat":51.0167,"lon":11.5833},{"name":"Henglein GmbH & Co. KG","address":"Lauchaerstraße 1,  06647  Kloster häseler","category":"D-Kunden","color":"#9C27B0","lat":51.2833,"lon":11.75},{"name":"Dr. Schär Deutschland GmbH","address":"Liechtensteiner Str. 1,  99510  Apolda","category":"D-Kunden","color":"#9C27B0","lat":51.0,"lon":11.5167},{"name":"Rinn Beton- und Naturstein","address":"Bürgeler Str. 5,  07646  Stadtroda","category":"D-Kunden","color":"#9C27B0","lat":50.8667,"lon":11.6833},{"name":"Grafe GmbH & Co KG","address":"Waldecker Str. 21,  99444  Blankenhain","category":"D-Kunden","color":"#9C27B0","lat":50.85,"lon":11.35},{"name":"TALLAG Gera GmbH","address":"Hermsdorf 31a,  07554  Gera","category":"D-Kunden","color":"#9C27B0","lat":50.8833,"lon":12.0833},{"name":"Mar-ko Fleischwaren GmbH & Co. KG","address":"Waldecker Str. 15,  99444  Blankenhain","category":"D-Kunden","color":"#9C27B0","lat":50.85,"lon":11.35},{"name":"ESF Elbe-Stahlwerke Feralpi GmbH","address":"Gröbaer Str. 3,  01591  Riesa","category":"D-Kunden","color":"#9C27B0","lat":51.3167,"lon":13.2833},{"name":"Dr.Gühring KG","address":"Treuener Höhe 6 Röhrsdorfer Allee 39,  08233  09247  Treuen (1.Werk) Chemnitz (2. Werk)","category":"D-Kunden","color":"#9C27B0","lat":50.5333,"lon":12.3},{"name":"Hörmann KG Ichtershausen","address":"Thöreyer Str. 6,  99334  Amt  Wachsenburg","category":"D-Kunden","color":"#9C27B0","lat":50.9833,"lon":10.95},{"name":"thermofin GmbH","address":"Am Windrad 1,  08468  Heinsdorfergrund","category":"D-Kunden","color":"#9C27B0","lat":50.6333,"lon":12.2667},{"name":"TENOWO GmbH | Plant Reichenbach","address":"Am Windrad 5,  08468  Heinsdorfergrund","category":"D-Kunden","color":"#9C27B0","lat":50.6333,"lon":12.2667},{"name":"Saint-Gobain Glass Flachglas Torgau GmbH","address":"Solarstraße 1 , 04860  Torgau","category":"D-Kunden","color":"#9C27B0","lat":51.5667,"lon":13.0},{"name":"Mercer Torgau GmbH & Co. KG","address":"Forstweg 1,  04860  Torgau","category":"D-Kunden","color":"#9C27B0","lat":51.5667,"lon":13.0},{"name":"PCW GmbH","address":"Am Alten Celluloidwerk 7 , 04838  Eilenburg","category":"D-Kunden","color":"#9C27B0","lat":51.45,"lon":12.6167},{"name":"Günther Spelsberg GmbH + Co. KG","address":"Vor dem Lohe 3,   99628  Buttstädt","category":"D-Kunden","color":"#9C27B0","lat":51.1333,"lon":11.4833},{"name":"Spielkartenfabrik Altenburg GmbH","address":"Porphyrstraße 11,  04600  Altenburg","category":"D-Kunden","color":"#9C27B0","lat":50.9833,"lon":12.45},{"name":"POLIFILM NEUKIRCHEN GmbH","address":"Hauptstraße 117,  08459  Neukirchen/Pleiße","category":"D-Kunden","color":"#9C27B0","lat":50.7833,"lon":12.35},{"name":"Salzgitter Hydroforming GmbH & Co. KG","address":"Gewerbering 26A 08451  Crimmitschau","category":"D-Kunden","color":"#9C27B0","lat":50.8167,"lon":12.3833},{"name":"Hydro Aluminium Gießerei Rackwitz GmbH","address":"August-Horch-Straße 2 04519 Rackwitz","category":"D-Kunden","color":"#9C27B0","lat":51.4667,"lon":12.4167},{"name":"Hydro Extrusion Deutschland GmbH","address":"Am Wasserwerk 1 04519 Rackwitz","category":"D-Kunden","color":"#9C27B0","lat":51.4667,"lon":12.4167}]
+;
 
-let API='', currentUser=null, isMaster=false;
-let state={users:[],exercises:[],sessions:[]};
-let checked=new Set(), refreshTimer=null, pendingUser=null;
+const map = L.map('map',{center:[51.1,12.4],zoom:8});
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom:19
+}).addTo(map);
 
-window.addEventListener('DOMContentLoaded',()=>{
-  API=localStorage.getItem('spt_api')||'';
-  if(API) startLogin(); else showScreen('cfg-screen');
+const active=new Set(['A-Kunden','B-Kunden','C-Kunden','D-Kunden']);
+let q='';
+const leafletMarkers={};
+
+function icon(color){
+  const s=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30"><path d="M11 0C4.925 0 0 4.925 0 11c0 8.25 11 19 11 19s11-10.75 11-19C22 4.925 17.075 0 11 0z" fill="${color}" stroke="rgba(0,0,0,.3)" stroke-width="1.2"/><circle cx="11" cy="11" r="4.5" fill="white" opacity=".85"/></svg>`;
+  return L.divIcon({html:s,iconSize:[22,30],iconAnchor:[11,30],popupAnchor:[0,-30],className:''});
+}
+
+DATA.forEach((d,i)=>{
+  if(d.lat===null||d.lon===null) return;
+  const m=L.marker([d.lat,d.lon],{icon:icon(d.color)});
+  m.bindPopup(`<div class="pc" style="color:${d.color}">${d.category}</div><div class="pn">${d.name}</div><div class="pa">${d.address||'–'}</div>`);
+  m.addTo(map);
+  leafletMarkers[i]=m;
 });
 
-// CONFIG
-function saveConfig(){
-  const url=document.getElementById('api-url').value.trim();
-  if(!url.startsWith('https://script.google.com')){
-    document.getElementById('cfg-err').textContent='Bitte eine gültige Google Apps Script URL eingeben.'; return;
-  }
-  const btn=document.getElementById('cfg-save-btn'); btn.disabled=true;
-  document.getElementById('cfg-err').textContent='';
-  fetch(url+'?t='+Date.now()).then(r=>r.json()).then(d=>{
-    API=url; localStorage.setItem('spt_api',API); startLogin();
-  }).catch(()=>{
-    document.getElementById('cfg-err').textContent='Verbindung fehlgeschlagen.'; btn.disabled=false;
+function renderList(){
+  const ml=document.getElementById('ml');
+  ml.innerHTML='';
+  const filtered=DATA.map((d,i)=>({d,i})).filter(({d})=>{
+    if(!active.has(d.category)) return false;
+    if(!q) return true;
+    return d.name.toLowerCase().includes(q)||d.address.toLowerCase().includes(q);
+  });
+  document.getElementById('lhd').textContent=`${filtered.length} Kunden`;
+  document.getElementById('vc').textContent=filtered.length;
+  if(!filtered.length){ml.innerHTML='<div class="no-r">Keine Treffer</div>';return;}
+  filtered.forEach(({d,i})=>{
+    const el=document.createElement('div');
+    el.className='li';el.dataset.i=i;
+    el.innerHTML=`<div class="ld" style="background:${d.color}"></div><div class="lt"><div class="ln">${d.name}</div><div class="la">${d.address||'–'}</div></div>`;
+    el.onclick=()=>{
+      document.querySelectorAll('.li').forEach(e=>e.classList.remove('hl'));
+      el.classList.add('hl');el.scrollIntoView({block:'nearest'});
+      if(leafletMarkers[i]){map.flyTo([d.lat,d.lon],14,{duration:.7});leafletMarkers[i].openPopup();}
+    };
+    ml.appendChild(el);
   });
 }
-function resetConfig(){ localStorage.removeItem('spt_api'); API=''; showScreen('cfg-screen'); }
 
-// LOGIN
-async function startLogin(){
-  showScreen('login-screen');
-  document.getElementById('player-grid').innerHTML='<div class="loading" style="grid-column:1/-1"><div class="spin"></div>Laden…</div>';
-  state=await fetchState();
-  // Merge passwords from sheet
-  state.users.forEach(u=>{ if(u.password) PWS[u.name]=u.password; });
-  renderGrid();
-}
+document.querySelectorAll('.fb').forEach(b=>{
+  b.onclick=()=>{
+    const c=b.dataset.c;
+    if(active.has(c)){active.delete(c);b.classList.remove('active');}
+    else{active.add(c);b.classList.add('active');}
+    DATA.forEach((d,i)=>{
+      if(!leafletMarkers[i]) return;
+      if(active.has(d.category)){if(!map.hasLayer(leafletMarkers[i]))leafletMarkers[i].addTo(map);}
+      else{if(map.hasLayer(leafletMarkers[i]))map.removeLayer(leafletMarkers[i]);}
+    });
+    renderList();
+  };
+});
 
-function renderGrid(){
-  const g=document.getElementById('player-grid');
-  if(!state.users.length){ g.innerHTML='<p class="empty" style="grid-column:1/-1">Noch keine Spieler.</p>'; return; }
-  g.innerHTML=state.users.map(u=>`
-    <div class="player-card" onclick="onCard('${u.name}','${u.color}')" style="border-color:${u.color}22">
-      <div class="pc-av" style="background:${u.color}18;color:${u.color};border-color:${u.color}">${u.name[0].toUpperCase()}</div>
-      <div class="pc-name">${u.name}</div>
-    </div>`).join('');
-}
+document.getElementById('si').oninput=e=>{q=e.target.value.toLowerCase();renderList();};
 
-function onCard(name,color){
-  pendingUser={name,color};
-  const av=document.getElementById('pw-av');
-  av.textContent=name[0].toUpperCase();
-  av.style.background=color+'18'; av.style.color=color; av.style.borderColor=color;
-  document.getElementById('pw-title').textContent=name;
-  document.getElementById('pw-inp').value='';
-  document.getElementById('pw-err').textContent='';
-  document.getElementById('pw-modal').style.display='flex';
-  setTimeout(()=>document.getElementById('pw-inp').focus(),150);
-}
-
-function checkPw(){
-  const val=document.getElementById('pw-inp').value;
-  const exp=PWS[pendingUser.name]||pendingUser.name.toLowerCase();
-  if(val===exp){
-    closeModal('pw-modal'); enterApp(pendingUser.name,pendingUser.color);
-  } else {
-    document.getElementById('pw-err').textContent='Falsches Passwort ✕';
-    document.getElementById('pw-inp').value='';
-    document.getElementById('pw-inp').focus();
-  }
-}
-
-function closeModal(id){ document.getElementById(id).style.display='none'; }
-
-// ENTER APP
-function enterApp(name,color){
-  currentUser={name,color}; isMaster=false; checked.clear();
-  const av=document.getElementById('tav');
-  av.textContent=name[0].toUpperCase();
-  av.style.background=color+'18'; av.style.color=color; av.style.borderColor=color;
-  document.getElementById('tname').textContent=name;
-  document.getElementById('admin-badge').style.display='none';
-  document.getElementById('duel-date').textContent=
-    new Date().toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'short'});
-  showScreen('app');
-  document.getElementById('botnav').style.display='flex';
-  showTab('today'); startAutoRefresh();
-}
-
-function doLogout(){
-  stopAutoRefresh(); currentUser=null; isMaster=false; checked.clear(); lockAdmin();
-  showScreen('login-screen'); renderGrid();
-}
-
-// MASTER
-function openMasterModal(){
-  document.getElementById('master-inp').value='';
-  document.getElementById('master-err').textContent='';
-  document.getElementById('master-modal').style.display='flex';
-  setTimeout(()=>document.getElementById('master-inp').focus(),150);
-}
-function checkMaster(){
-  if(document.getElementById('master-inp').value===MASTER){
-    closeModal('master-modal'); isMaster=true;
-    document.getElementById('admin-badge').style.display='inline';
-    document.getElementById('manage-locked').style.display='none';
-    document.getElementById('manage-unlocked').style.display='block';
-    document.getElementById('nav-manage').innerHTML='<span class="bn-ico">⚙️</span>Verwalten';
-    renderManage();
-  } else {
-    document.getElementById('master-err').textContent='Falsches Passwort ✕';
-    document.getElementById('master-inp').value='';
-    document.getElementById('master-inp').focus();
-  }
-}
-function lockAdmin(){
-  isMaster=false;
-  document.getElementById('manage-locked').style.display='block';
-  document.getElementById('manage-unlocked').style.display='none';
-  document.getElementById('admin-badge').style.display='none';
-  document.getElementById('nav-manage').innerHTML='<span class="bn-ico">🔒</span>Verwalten';
-}
-
-// TABS
-function showTab(t){
-  ['today','board','manage'].forEach(n=>{
-    document.getElementById('pane-'+n).classList.toggle('on',n===t);
-    document.getElementById('nav-'+n).classList.toggle('active',n===t);
-  });
-  if(t==='manage'){
-    document.getElementById('manage-locked').style.display=isMaster?'none':'block';
-    document.getElementById('manage-unlocked').style.display=isMaster?'block':'none';
-    if(isMaster) renderManage();
-  }
-  renderAll();
-}
-
-// DATA
-async function fetchState(){
-  try{ const r=await fetch(API+'?t='+Date.now()); return await r.json(); }
-  catch(e){ return state; }
-}
-async function post(body){ try{ await fetch(API,{method:'POST',body:JSON.stringify(body)}); }catch(e){} }
-
-function todayStr(){ return new Date().toISOString().slice(0,10); }
-
-function todayPts(){
-  const today=todayStr(), m={};
-  state.users.forEach(u=>{m[u.name]={pts:0,checks:0}});
-  state.sessions.filter(s=>s.date===today).forEach(s=>{
-    if(!m[s.user])m[s.user]={pts:0,checks:0};
-    m[s.user].pts+=Number(s.points); m[s.user].checks++;
-  });
-  return m;
-}
-
-function totalPts(){
-  const m={};
-  state.users.forEach(u=>{m[u.name]=0});
-  state.sessions.forEach(s=>{ if(m[s.user]===undefined)m[s.user]=0; m[s.user]+=Number(s.points); });
-  return m;
-}
-
-function colorOf(name){ const u=state.users.find(u=>u.name===name); return u?u.color:'#888'; }
-
-// RENDER
-function renderAll(){
-  renderDuel();
-  const active=document.querySelector('.tab-pane.on');
-  if(!active) return;
-  if(active.id==='pane-today') renderExList();
-  if(active.id==='pane-board') renderBoard();
-}
-
-function renderDuel(){
-  const tp=todayPts(), users=state.users;
-  if(!users.length) return;
-  document.getElementById('scores-row').innerHTML=users.map((u,i)=>
-    `<div class="score-block">
-      <div class="sc-name" style="color:${u.color}">${u.name}</div>
-      <div class="sc-pts" style="color:${u.color}">${tp[u.name]?tp[u.name].pts:0}</div>
-      <div class="sc-sub">${tp[u.name]?tp[u.name].checks:0} Satz${(tp[u.name]&&tp[u.name].checks!==1)?'e':''}</div>
-    </div>`+(i<users.length-1?'<div class="vs-txt">·</div>':'')).join('');
-  const total=users.reduce((a,u)=>a+(tp[u.name]?tp[u.name].pts:0),0);
-  const u0pts=tp[users[0].name]?tp[users[0].name].pts:0;
-  const pct=total>0?Math.round((u0pts/total)*100):Math.round(100/users.length);
-  const bar=document.getElementById('duel-bar');
-  bar.style.width=pct+'%'; bar.style.background=users[0].color;
-  const sorted=users.slice().sort((a,b)=>(tp[b.name]?tp[b.name].pts:0)-(tp[a.name]?tp[a.name].pts:0));
-  const t0=tp[sorted[0].name]?tp[sorted[0].name].pts:0;
-  const t1=sorted[1]&&tp[sorted[1].name]?tp[sorted[1].name].pts:0;
-  let msg='Heute noch keine Sätze — wer fängt an?';
-  if(total>0){
-    if(t0>t1) msg=`🔥 ${sorted[0].name} führt +${t0-t1} Pkt — ${sorted[1]?sorted[1].name+', aufwachen!':'weiter so!'}`;
-    else msg='⚖️ Gleichstand — wer macht den nächsten Satz?';
-  }
-  document.getElementById('duel-msg').textContent=msg;
-}
-
-function renderExList(){
-  const el=document.getElementById('exlist');
-  if(!state.exercises.length){
-    el.innerHTML='<p class="empty">Noch keine Übungen.<br>Adde legt sie im Admin-Bereich fest.</p>';
-    document.getElementById('save-btn').disabled=true; return;
-  }
-  el.innerHTML=state.exercises.map(e=>`
-    <div class="exitem${checked.has(e)?' done':''}" onclick="toggleEx('${e.replace(/'/g,"\\'")}')">
-      <div class="chkb"><svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-        <path d="M1 5L4.5 8.5L11 1.5" stroke="#040a06" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg></div>
-      <span class="exname">${e}</span>
-      <span class="expill">${checked.has(e)?'+'+PPT+' ✓':'+'+PPT+' Pkt.'}</span>
-    </div>`).join('');
-  document.getElementById('save-btn').disabled=checked.size===0;
-}
-
-function toggleEx(e){ checked.has(e)?checked.delete(e):checked.add(e); renderExList(); }
-
-async function saveChecked(){
-  if(!checked.size||!currentUser) return;
-  const btn=document.getElementById('save-btn');
-  btn.disabled=true; btn.textContent='Speichere…';
-  const exs=[...checked];
-  for(const ex of exs){
-    await post({action:'checkExercise',user:currentUser.name,exercise:ex});
-    state.sessions.push({user:currentUser.name,date:todayStr(),exercise:ex,points:PPT,timestamp:new Date().toISOString()});
-  }
-  const pts=exs.length*PPT;
-  checked.clear(); btn.textContent='Sätze speichern →';
-  renderAll(); showToast('+'+pts+' Punkte für '+currentUser.name+' 💪');
-  setTimeout(async()=>{ state=await fetchState(); state.users.forEach(u=>{if(u.password)PWS[u.name]=u.password;}); renderAll(); },1500);
-}
-
-function renderBoard(){
-  const tp=todayPts(), total=totalPts();
-  const sorted=state.users.slice().sort((a,b)=>total[b.name]-total[a.name]);
-  const medals=['🥇','🥈','🥉'];
-  document.getElementById('lb-list').innerHTML=sorted.map((u,i)=>`
-    <div class="lb-row" style="${i===0?'border-color:'+u.color+'55':''}">
-      <span class="lb-rank" style="color:${u.color}">${medals[i]||(i+1)+'.'}</span>
-      <div style="flex:1">
-        <div class="lb-name" style="color:${u.color}">${u.name}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">heute: ${tp[u.name]?tp[u.name].pts:0} Pkt.</div>
-      </div>
-      <span class="lb-pts" style="color:${u.color}">${total[u.name]} Pkt.</span>
-    </div>`).join('');
-  const grouped={};
-  state.sessions.forEach(s=>{
-    if(!grouped[s.date])grouped[s.date]={};
-    if(!grouped[s.date][s.user])grouped[s.date][s.user]={pts:0};
-    grouped[s.date][s.user].pts+=Number(s.points);
-  });
-  const dates=Object.keys(grouped).sort((a,b)=>b.localeCompare(a)).slice(0,14);
-  document.getElementById('hist-list').innerHTML=dates.length
-    ?dates.map(date=>{
-        const d=new Date(date).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'});
-        const entries=Object.entries(grouped[date]).sort((a,b)=>b[1].pts-a[1].pts)
-          .map(([n,v])=>`<span style="color:${colorOf(n)};font-weight:600">${n}</span>&nbsp;${v.pts}Pkt.`).join(' · ');
-        return `<div class="hist-row"><span class="hist-date">${d}</span><span class="hist-body">${entries}</span></div>`;
-      }).join('')
-    :'<p class="empty">Noch kein Verlauf.</p>';
-}
-
-function renderManage(){
-  document.getElementById('ex-manage-list').innerHTML=state.exercises.length
-    ?state.exercises.map(e=>`<div class="mgmt-row"><span class="mgmt-name">${e}</span><button class="del-btn" onclick="removeExercise(${JSON.stringify(e)})">✕</button></div>`).join('')
-    :'<p class="empty">Noch keine Übungen.</p>';
-  document.getElementById('user-manage-list').innerHTML=state.users.length
-    ?state.users.map(u=>`<div class="mgmt-row"><div class="dot" style="background:${u.color}"></div><span class="mgmt-name">${u.name}</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)">pw: ${u.password||PWS[u.name]||u.name.toLowerCase()}</span><button class="del-btn" onclick="removeUser(${JSON.stringify(u.name)})">✕</button></div>`).join('')
-    :'<p class="empty">Noch keine Spieler.</p>';
-}
-
-async function addExercise(){
-  const inp=document.getElementById('new-ex'),v=inp.value.trim();
-  if(!v) return; inp.value='';
-  await post({action:'addExercise',name:v});
-  if(!state.exercises.includes(v)) state.exercises.push(v);
-  renderManage(); renderExList(); showToast('Übung hinzugefügt ✓');
-}
-
-async function removeExercise(name){
-  await post({action:'removeExercise',name});
-  state.exercises=state.exercises.filter(e=>e!==name);
-  checked.delete(name); renderManage(); renderExList();
-}
-
-function openNuModal(){
-  document.getElementById('nu-name').value='';
-  document.getElementById('nu-pw').value='';
-  document.getElementById('nu-color').value='#22c55e';
-  document.getElementById('nu-modal').style.display='flex';
-  setTimeout(()=>document.getElementById('nu-name').focus(),150);
-}
-
-async function confirmAddUser(){
-  const name=document.getElementById('nu-name').value.trim();
-  const pw=document.getElementById('nu-pw').value.trim();
-  const color=document.getElementById('nu-color').value;
-  if(!name||!pw){ showToast('Name und Passwort eingeben!'); return; }
-  closeModal('nu-modal');
-  await post({action:'addUser',name,color,password:pw});
-  if(!state.users.find(u=>u.name===name)) state.users.push({name,color,password:pw});
-  PWS[name]=pw;
-  renderManage(); showToast(name+' hinzugefügt ✓');
-}
-
-async function removeUser(name){
-  await post({action:'removeUser',name});
-  state.users=state.users.filter(u=>u.name!==name);
-  renderManage();
-}
-
-function startAutoRefresh(){
-  stopAutoRefresh();
-  refreshTimer=setInterval(async()=>{
-    const dot=document.getElementById('sync-dot');
-    if(dot)dot.classList.add('off');
-    const fresh=await fetchState();
-    fresh.users.forEach(u=>{if(u.password)PWS[u.name]=u.password;});
-    state=fresh;
-    if(dot)dot.classList.remove('off');
-    renderAll();
-  },15000);
-}
-function stopAutoRefresh(){ if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;} }
-
-function showScreen(id){
-  ['cfg-screen','login-screen','app'].forEach(s=>{
-    const el=document.getElementById(s); if(el)el.style.display='none';
-  });
-  document.getElementById('botnav').style.display='none';
-  const t=document.getElementById(id);
-  if(t)t.style.display=(id==='app')?'block':'flex';
-}
-
-function showToast(m){
-  const t=document.getElementById('toast'); t.textContent=m;
-  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600);
-}
+document.getElementById('tc').textContent=DATA.length;
+renderList();
 </script>
 </body>
 </html>
