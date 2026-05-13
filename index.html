@@ -6,22 +6,11 @@
 <title>Sport Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#080810;--s1:#10101c;--s2:#18182a;--s3:#202038;
-  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.14);
-  --text:#f0f0f8;--muted:#5a5a7a;--muted2:#8888aa;
-  --green:#22c55e;--green-bg:rgba(34,197,94,.08);
-  --red:#f87171;
-}
+:root{--bg:#080810;--s1:#10101c;--s2:#18182a;--s3:#202038;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.14);--text:#f0f0f8;--muted:#5a5a7a;--muted2:#8888aa;--green:#22c55e;--green-bg:rgba(34,197,94,.08);--red:#f87171}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
 body{overflow-x:hidden}
-
-/* ── CONFIG SCREEN ── */
-#cfg-screen{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:100vh;padding:2rem 1.25rem;text-align:center;gap:1.5rem;
-}
+#cfg-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1.25rem;text-align:center;gap:1.5rem}
 .cfg-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.05em;line-height:1}
 .cfg-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase}
 .cfg-box{width:100%;max-width:400px;background:var(--s1);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;text-align:left}
@@ -30,63 +19,58 @@ body{overflow-x:hidden}
 .cfg-input:focus{border-color:rgba(255,255,255,.3)}
 .cfg-input::placeholder{color:var(--muted)}
 .cfg-hint{font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:1rem}
-.cfg-hint a{color:var(--muted2)}
 .cfg-btn{width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:var(--green);color:#040a06;border:none;border-radius:10px;cursor:pointer}
 .cfg-btn:hover{filter:brightness(1.1)}
 .cfg-btn:disabled{background:var(--s3);color:var(--muted);cursor:default}
 .cfg-err{font-family:'DM Mono',monospace;font-size:11px;color:var(--red);text-align:center;margin-top:.5rem}
-
-/* ── LOGIN SCREEN ── */
 #login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1.25rem;gap:1.5rem}
 .login-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.05em;line-height:1;text-align:center}
 .login-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase}
 .player-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:380px}
-.player-card{
-  padding:1.5rem 1rem;border:1px solid var(--border);border-radius:14px;
-  cursor:pointer;transition:all .2s;background:var(--s1);text-align:center;
-}
+.player-card{padding:1.5rem 1rem;border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:all .2s;background:var(--s1);text-align:center}
 .player-card:active{transform:scale(.97)}
 .pc-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;margin:0 auto 10px;border:1.5px solid}
 .pc-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em}
 .cfg-link{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline}
-
-/* ── MAIN APP ── */
+/* MODALS */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:center;justify-content:center;padding:1.5rem}
+.modal-box{background:var(--s1);border:1px solid var(--border2);border-radius:20px;padding:2rem 1.75rem;width:100%;max-width:320px;text-align:center}
+.modal-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;margin:0 auto 1rem;border:2px solid}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.04em;margin-bottom:.2rem}
+.modal-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-bottom:1.5rem;letter-spacing:.06em}
+.modal-inp{width:100%;padding:14px;font-family:'Inter',sans-serif;font-size:18px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;text-align:center;letter-spacing:.1em;margin-bottom:.75rem}
+.modal-inp:focus{border-color:rgba(255,255,255,.3)}
+.modal-btn{width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;background:var(--green);color:#040a06;border:none;border-radius:10px;cursor:pointer;margin-bottom:.75rem}
+.modal-btn:hover{filter:brightness(1.1)}
+.modal-btn.orange{background:#f97316}
+.modal-cancel{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;width:100%}
+.modal-err{font-family:'DM Mono',monospace;font-size:11px;color:var(--red);margin-top:.5rem;min-height:16px;display:block}
+/* APP */
 #app{display:none;max-width:480px;margin:0 auto;padding:.75rem 1rem 5.5rem}
-
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0 1rem}
 .tav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;border:1.5px solid;flex-shrink:0}
 .tname{font-size:14px;font-weight:600;margin-left:8px;flex:1}
+.admin-badge{font-family:'DM Mono',monospace;font-size:9px;background:rgba(249,115,22,.15);color:#f97316;border:1px solid rgba(249,115,22,.3);border-radius:6px;padding:2px 7px;margin-left:6px;letter-spacing:.06em;display:none}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:6px;animation:pulse 2s infinite}
 .sync-dot.off{background:var(--muted);animation:none}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .sw-btn{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);background:transparent;border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap}
-.sw-btn:hover{border-color:var(--border2);color:var(--text)}
-
-/* Duel card */
 .duel{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:1.1rem 1.1rem .9rem;margin-bottom:1rem}
 .duel-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
 .duel-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
 .duel-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
-.scores-row{display:flex;align-items:center;gap:6px;margin-bottom:.75rem}
-.score-block{flex:1;text-align:center}
-.sc-name{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
-.sc-pts{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:1;letter-spacing:.02em}
+.scores-row{display:flex;align-items:center;gap:4px;margin-bottom:.75rem;flex-wrap:wrap;justify-content:center}
+.score-block{flex:1;text-align:center;min-width:55px}
+.sc-name{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.sc-pts{font-family:'Bebas Neue',sans-serif;font-size:46px;line-height:1}
 .sc-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:2px}
-.vs-txt{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted);flex-shrink:0}
-.duel-bar{height:3px;border-radius:2px;background:var(--s3);overflow:hidden;margin-bottom:.65rem;display:flex}
-.bar-a{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.bar-n{height:100%;flex:1}
+.vs-txt{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);flex-shrink:0}
+.duel-bar{height:3px;border-radius:2px;background:var(--s3);overflow:hidden;margin-bottom:.65rem}
+.duel-bar-inner{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1)}
 .duel-msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);text-align:center;min-height:16px}
-
-/* Exercise list */
 .slabel{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin:.9rem 0 .5rem}
 .exlist{display:flex;flex-direction:column;gap:6px}
-.exitem{
-  display:flex;align-items:center;gap:11px;padding:12px 13px;
-  background:var(--s1);border:1px solid var(--border);border-radius:12px;
-  cursor:pointer;transition:border-color .15s,background .15s;
-  -webkit-tap-highlight-color:transparent;user-select:none;
-}
+.exitem{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--s1);border:1px solid var(--border);border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;transition:border-color .15s,background .15s}
 .exitem:active{transform:scale(.98)}
 .exitem.done{border-color:var(--green);background:var(--green-bg)}
 .chkb{width:21px;height:21px;border-radius:5px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
@@ -97,36 +81,17 @@ body{overflow-x:hidden}
 .exitem.done .exname{color:var(--green)}
 .expill{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:var(--s3);padding:3px 8px;border-radius:20px}
 .exitem.done .expill{background:rgba(34,197,94,.15);color:var(--green)}
-
-.save-btn{
-  width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;
-  background:var(--green);color:#040a06;border:none;border-radius:12px;cursor:pointer;
-  margin-top:.75rem;transition:filter .2s;
-}
+.save-btn{width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;background:var(--green);color:#040a06;border:none;border-radius:12px;cursor:pointer;margin-top:.75rem;transition:filter .2s}
 .save-btn:hover{filter:brightness(1.1)}
 .save-btn:disabled{background:var(--s2);color:var(--muted);cursor:default;filter:none}
-
-/* Leaderboard */
 .lb-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:.5rem}
-.lb-row{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;
-  background:var(--s1);border:1px solid var(--border);border-radius:12px;
-}
-.lb-row.top{border-color:rgba(255,255,255,.15)}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s1);border:1px solid var(--border);border-radius:12px}
 .lb-rank{font-family:'Bebas Neue',sans-serif;font-size:18px;width:24px;text-align:center;flex-shrink:0}
 .lb-name{flex:1;font-size:14px;font-weight:600}
 .lb-pts{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
-.lb-today{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-left:8px}
-
-/* History */
-.hist-row{
-  display:flex;align-items:center;gap:10px;padding:10px 13px;
-  background:var(--s1);border:1px solid var(--border);border-radius:10px;margin-bottom:5px;
-}
+.hist-row{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--s1);border:1px solid var(--border);border-radius:10px;margin-bottom:5px}
 .hist-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);white-space:nowrap;flex-shrink:0}
 .hist-body{flex:1;font-size:12px;color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* Manage */
 .add-row{display:flex;gap:7px;margin-bottom:.75rem}
 .add-inp{flex:1;padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;background:var(--s1);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none}
 .add-inp:focus{border-color:rgba(255,255,255,.28)}
@@ -135,490 +100,512 @@ body{overflow-x:hidden}
 .add-btn:hover{background:var(--s3)}
 .mgmt-row{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--s1);border:1px solid var(--border);border-radius:10px;margin-bottom:5px}
 .mgmt-name{flex:1;font-size:14px;font-weight:500}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center}
 .del-btn:hover{color:var(--red);background:rgba(248,113,113,.1)}
-.user-color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-
-/* Bottom nav */
-#botnav{
-  position:fixed;bottom:0;left:0;right:0;
-  background:rgba(8,8,16,.92);border-top:1px solid var(--border);
-  display:none;padding:.4rem .75rem calc(.4rem + env(safe-area-inset-bottom));
-  gap:4px;backdrop-filter:blur(16px);
-}
+#botnav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,16,.93);border-top:1px solid var(--border);display:none;padding:.4rem .75rem calc(.4rem + env(safe-area-inset-bottom));gap:4px;backdrop-filter:blur(16px)}
 .bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border:none;background:transparent;color:var(--muted2);cursor:pointer;border-radius:10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase}
 .bn-btn.active{color:var(--text);background:var(--s3)}
 .bn-ico{font-size:17px;line-height:1}
 .tab-pane{display:none}
 .tab-pane.on{display:block}
 .empty{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-align:center;padding:2rem 0;line-height:1.7}
-
-/* Loading */
 .loading{display:flex;align-items:center;justify-content:center;gap:8px;padding:2rem 0;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)}
 .spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Toast */
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--green);color:#040a06;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;padding:10px 20px;border-radius:10px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:999}
 .toast.show{opacity:1}
+/* NU MODAL innards */
+.nu-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;text-align:left}
+.nu-inp{width:100%;padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;margin-bottom:.9rem}
+.nu-inp::placeholder{color:var(--muted)}
+.nu-inp:focus{border-color:rgba(255,255,255,.3)}
+.nu-row{display:flex;gap:8px;align-items:center;margin-bottom:.9rem}
+.nu-btns{display:flex;gap:8px;margin-top:.25rem}
+.nu-ok{flex:1;padding:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:#f97316;color:#040a06;border:none;border-radius:10px;cursor:pointer}
+.nu-no{flex:1;padding:12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--muted2);background:var(--s3);border:none;border-radius:10px;cursor:pointer}
 </style>
 </head>
 <body>
 
-<!-- ①  Config: API URL eingeben -->
+<!-- CONFIG -->
 <div id="cfg-screen">
-  <div>
-    <div class="cfg-title">SPORT<br>TRACKER</div>
-    <div class="cfg-sub" style="margin-top:.4rem">Setup — einmalig</div>
-  </div>
+  <div><div class="cfg-title">SPORT<br>TRACKER</div><div class="cfg-sub" style="margin-top:.4rem">Setup — einmalig</div></div>
   <div class="cfg-box">
     <div class="cfg-label">Google Apps Script URL</div>
     <input class="cfg-input" id="api-url" type="url" placeholder="https://script.google.com/macros/s/…/exec">
-    <div class="cfg-hint">
-      Noch kein Script? Schritt-für-Schritt Anleitung unten in der <code>README.txt</code>.<br><br>
-      Die URL wird lokal gespeichert — du gibst sie nur einmal ein.
-    </div>
+    <div class="cfg-hint">Die URL aus deinem Google Apps Script einfügen. Wird lokal gespeichert.</div>
     <button class="cfg-btn" id="cfg-save-btn" onclick="saveConfig()">Verbinden →</button>
     <div class="cfg-err" id="cfg-err"></div>
   </div>
 </div>
 
-<!-- ②  Login: Spieler wählen -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-title">SPORT<br>TRACKER</div>
   <div class="login-sub">Wer bist du?</div>
   <div class="player-grid" id="player-grid">
-    <div class="loading"><div class="spin"></div>Laden…</div>
+    <div class="loading" style="grid-column:1/-1"><div class="spin"></div>Laden…</div>
   </div>
   <span class="cfg-link" onclick="resetConfig()">⚙ API URL ändern</span>
 </div>
 
-<!-- ③  App -->
+<!-- PASSWORT MODAL (Spieler) -->
+<div class="modal-bg" id="pw-modal">
+  <div class="modal-box">
+    <div class="modal-av" id="pw-av"></div>
+    <div class="modal-title" id="pw-title"></div>
+    <div class="modal-sub">PASSWORT EINGEBEN</div>
+    <input class="modal-inp" id="pw-inp" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="modal-btn" onclick="checkPw()">Einloggen →</button>
+    <span class="modal-err" id="pw-err"></span>
+    <button class="modal-cancel" onclick="closeModal('pw-modal')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- MASTER MODAL -->
+<div class="modal-bg" id="master-modal">
+  <div class="modal-box" style="border-color:rgba(249,115,22,.3)">
+    <div style="font-size:38px;margin-bottom:.75rem">🔐</div>
+    <div class="modal-title" style="color:#f97316">ADMIN</div>
+    <div class="modal-sub">Nur für Adde</div>
+    <input class="modal-inp" id="master-inp" type="password" placeholder="Masterpasswort" onkeydown="if(event.key==='Enter')checkMaster()" style="border-color:rgba(249,115,22,.2)">
+    <button class="modal-btn orange" onclick="checkMaster()">Entsperren →</button>
+    <span class="modal-err" id="master-err"></span>
+    <button class="modal-cancel" onclick="closeModal('master-modal')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- NEUER SPIELER MODAL -->
+<div class="modal-bg" id="nu-modal">
+  <div class="modal-box" style="text-align:left">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em;color:#f97316;margin-bottom:1.25rem">Neuen Spieler</div>
+    <div class="nu-label">Name</div>
+    <input class="nu-inp" id="nu-name" type="text" placeholder="z.B. Marco">
+    <div class="nu-label">Passwort</div>
+    <input class="nu-inp" id="nu-pw" type="text" placeholder="z.B. marco123">
+    <div class="nu-label">Farbe</div>
+    <div class="nu-row">
+      <input type="color" id="nu-color" value="#22c55e" style="width:42px;height:42px;border:1px solid var(--border2);border-radius:8px;background:var(--s2);cursor:pointer;padding:3px">
+      <span style="font-size:13px;color:var(--muted2)">Spielerfarbe wählen</span>
+    </div>
+    <div class="nu-btns">
+      <button class="nu-no" onclick="closeModal('nu-modal')">Abbrechen</button>
+      <button class="nu-ok" onclick="confirmAddUser()">Hinzufügen →</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div style="display:flex;align-items:center;flex:1">
+    <div style="display:flex;align-items:center;flex:1;overflow:hidden">
       <div class="tav" id="tav"></div>
       <span class="tname" id="tname"></span>
-      <span class="sync-dot" id="sync-dot" title="Sync"></span>
+      <span class="admin-badge" id="admin-badge">ADMIN</span>
+      <span class="sync-dot" id="sync-dot"></span>
     </div>
-    <button class="sw-btn" onclick="showLoginScreen()">Wechseln</button>
+    <button class="sw-btn" onclick="doLogout()">Wechseln</button>
   </div>
 
-  <!-- Heute -->
+  <!-- HEUTE -->
   <div class="tab-pane on" id="pane-today">
-    <div class="duel" id="duel-card">
+    <div class="duel">
       <div class="duel-hdr">
         <span class="duel-lbl">Heute</span>
-        <span class="duel-date" id="duel-date-lbl"></span>
+        <span class="duel-date" id="duel-date"></span>
       </div>
-      <div class="scores-row" id="scores-row">
-        <div class="loading"><div class="spin"></div></div>
-      </div>
-      <div class="duel-bar"><div class="bar-a" id="bar-a" style="width:50%;background:var(--green)"></div><div class="bar-n" id="bar-n"></div></div>
-      <div class="duel-msg" id="duel-msg">Lade Daten…</div>
+      <div class="scores-row" id="scores-row"><div class="loading"><div class="spin"></div></div></div>
+      <div class="duel-bar"><div class="duel-bar-inner" id="duel-bar" style="width:50%"></div></div>
+      <div class="duel-msg" id="duel-msg">Lade…</div>
     </div>
-    <div class="slabel">Deine Übungen — abhaken</div>
+    <div class="slabel">Deine Übungen</div>
     <div class="exlist" id="exlist"><div class="loading"><div class="spin"></div>Laden…</div></div>
     <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>Sätze speichern →</button>
   </div>
 
-  <!-- Rangliste -->
+  <!-- RANGLISTE -->
   <div class="tab-pane" id="pane-board">
-    <div class="slabel" style="margin-top:.5rem">Heute</div>
-    <div id="board-duel"></div>
-    <div class="slabel">Gesamt</div>
+    <div class="slabel" style="margin-top:.5rem">Gesamtrangliste</div>
     <div class="lb-wrap" id="lb-list"></div>
     <div class="slabel">Verlauf</div>
     <div id="hist-list"></div>
   </div>
 
-  <!-- Übungen & Spieler -->
+  <!-- VERWALTEN -->
   <div class="tab-pane" id="pane-manage">
-    <div class="slabel" style="margin-top:.5rem">Übung hinzufügen</div>
-    <div class="add-row">
-      <input class="add-inp" id="new-ex" placeholder="z.B. Liegestütze (30)" onkeydown="if(event.key==='Enter')addExercise()">
-      <button class="add-btn" onclick="addExercise()">+ Hinzufügen</button>
+    <div id="manage-locked">
+      <div style="text-align:center;padding:3rem 1rem">
+        <div style="font-size:48px;margin-bottom:1rem">🔒</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;margin-bottom:.5rem">Admin Bereich</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);margin-bottom:1.5rem">Nur für Adde zugänglich</div>
+        <button onclick="openMasterModal()" style="padding:13px 28px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:#f97316;color:#040a06;border:none;border-radius:12px;cursor:pointer">Mit Masterpasswort entsperren</button>
+      </div>
     </div>
-    <div class="slabel">Übungen</div>
-    <div id="ex-manage-list"></div>
-
-    <div class="slabel" style="margin-top:1.5rem">Spieler hinzufügen</div>
-    <div class="add-row">
-      <input class="add-inp" id="new-user" placeholder="Name" style="flex:1" onkeydown="if(event.key==='Enter')addUser()">
-      <input type="color" id="new-user-color" value="#22c55e" style="width:38px;height:38px;border:1px solid var(--border2);border-radius:10px;background:var(--s1);cursor:pointer;padding:3px">
-      <button class="add-btn" onclick="addUser()">+ Hinzufügen</button>
+    <div id="manage-unlocked" style="display:none">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f97316;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:10px;padding:10px 14px;margin-bottom:1rem;line-height:1.6">🔐 Admin-Modus aktiv</div>
+      <div class="slabel" style="margin-top:0">Übung hinzufügen</div>
+      <div class="add-row">
+        <input class="add-inp" id="new-ex" placeholder="z.B. Liegestütze (30 Stück)" onkeydown="if(event.key==='Enter')addExercise()">
+        <button class="add-btn" onclick="addExercise()">+ Add</button>
+      </div>
+      <div id="ex-manage-list"></div>
+      <div class="slabel" style="margin-top:1.5rem">Spieler hinzufügen</div>
+      <button onclick="openNuModal()" style="width:100%;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:var(--s2);color:#f97316;border:1px solid rgba(249,115,22,.3);border-radius:12px;cursor:pointer;margin-bottom:1rem">+ Neuen Spieler anlegen</button>
+      <div id="user-manage-list"></div>
+      <button onclick="lockAdmin()" style="width:100%;margin-top:1.5rem;padding:11px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);background:transparent;border:1px solid var(--border);border-radius:10px;cursor:pointer">🔒 Admin-Modus beenden</button>
     </div>
-    <div class="slabel">Spieler</div>
-    <div id="user-manage-list"></div>
   </div>
 </div>
 
-<!-- Bottom Nav -->
 <div id="botnav">
   <button class="bn-btn active" id="nav-today" onclick="showTab('today')"><span class="bn-ico">⚡</span>Heute</button>
   <button class="bn-btn" id="nav-board" onclick="showTab('board')"><span class="bn-ico">🏆</span>Rangliste</button>
-  <button class="bn-btn" id="nav-manage" onclick="showTab('manage')"><span class="bn-ico">✚</span>Verwalten</button>
+  <button class="bn-btn" id="nav-manage" onclick="showTab('manage')"><span class="bn-ico">🔒</span>Verwalten</button>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ── State ──
-let API = '';
-let currentUser = null;
-let state = { users: [], exercises: [], sessions: [] };
-let checked = new Set();
-let refreshTimer = null;
+// ── Passwörter ──
+const MASTER = 'Dampflion2026';
+const PWS = { 'Adde':'Dampflion2026', 'Niklas':'niklas', 'Kathleen':'kathleen' };
 const PPT = 2;
 
-// ── Startup ──
-window.addEventListener('DOMContentLoaded', () => {
-  API = localStorage.getItem('spt_api') || '';
-  if (API) startLoginScreen();
-  else showEl('cfg-screen');
+let API='', currentUser=null, isMaster=false;
+let state={users:[],exercises:[],sessions:[]};
+let checked=new Set(), refreshTimer=null, pendingUser=null;
+
+window.addEventListener('DOMContentLoaded',()=>{
+  API=localStorage.getItem('spt_api')||'';
+  if(API) startLogin(); else showScreen('cfg-screen');
 });
 
-// ── Config ──
-function saveConfig() {
-  const url = document.getElementById('api-url').value.trim();
-  if (!url.startsWith('https://script.google.com')) {
-    document.getElementById('cfg-err').textContent = 'Bitte eine gültige Google Apps Script URL eingeben.';
-    return;
+// CONFIG
+function saveConfig(){
+  const url=document.getElementById('api-url').value.trim();
+  if(!url.startsWith('https://script.google.com')){
+    document.getElementById('cfg-err').textContent='Bitte eine gültige Google Apps Script URL eingeben.'; return;
   }
-  document.getElementById('cfg-save-btn').disabled = true;
-  document.getElementById('cfg-err').textContent = '';
-  // Test-Fetch
-  fetch(url)
-    .then(r => r.json())
-    .then(d => {
-      if (!d.users) throw new Error('Ungültige Antwort');
-      API = url;
-      localStorage.setItem('spt_api', API);
-      startLoginScreen();
-    })
-    .catch(() => {
-      document.getElementById('cfg-err').textContent = 'Verbindung fehlgeschlagen. URL prüfen.';
-      document.getElementById('cfg-save-btn').disabled = false;
-    });
+  const btn=document.getElementById('cfg-save-btn'); btn.disabled=true;
+  document.getElementById('cfg-err').textContent='';
+  fetch(url+'?t='+Date.now()).then(r=>r.json()).then(d=>{
+    API=url; localStorage.setItem('spt_api',API); startLogin();
+  }).catch(()=>{
+    document.getElementById('cfg-err').textContent='Verbindung fehlgeschlagen.'; btn.disabled=false;
+  });
+}
+function resetConfig(){ localStorage.removeItem('spt_api'); API=''; showScreen('cfg-screen'); }
+
+// LOGIN
+async function startLogin(){
+  showScreen('login-screen');
+  document.getElementById('player-grid').innerHTML='<div class="loading" style="grid-column:1/-1"><div class="spin"></div>Laden…</div>';
+  state=await fetchState();
+  // Merge passwords from sheet
+  state.users.forEach(u=>{ if(u.password) PWS[u.name]=u.password; });
+  renderGrid();
 }
 
-function resetConfig() {
-  localStorage.removeItem('spt_api'); API = '';
-  hideAll(); showEl('cfg-screen');
-}
-
-// ── Login ──
-async function startLoginScreen() {
-  hideAll();
-  document.getElementById('login-screen').style.display = 'flex';
-  const grid = document.getElementById('player-grid');
-  grid.innerHTML = '<div class="loading"><div class="spin"></div>Spieler laden…</div>';
-  state = await fetchState();
-  renderPlayerGrid();
-}
-
-function renderPlayerGrid() {
-  const grid = document.getElementById('player-grid');
-  if (!state.users.length) {
-    grid.innerHTML = '<p class="empty" style="grid-column:1/-1">Noch keine Spieler.<br>Füge Spieler über "Verwalten" hinzu.</p>';
-    return;
-  }
-  grid.innerHTML = state.users.map(u => `
-    <div class="player-card" onclick="selectUser('${u.name}','${u.color}')" style="border-color:${u.color}22">
+function renderGrid(){
+  const g=document.getElementById('player-grid');
+  if(!state.users.length){ g.innerHTML='<p class="empty" style="grid-column:1/-1">Noch keine Spieler.</p>'; return; }
+  g.innerHTML=state.users.map(u=>`
+    <div class="player-card" onclick="onCard('${u.name}','${u.color}')" style="border-color:${u.color}22">
       <div class="pc-av" style="background:${u.color}18;color:${u.color};border-color:${u.color}">${u.name[0].toUpperCase()}</div>
       <div class="pc-name">${u.name}</div>
     </div>`).join('');
 }
 
-function selectUser(name, color) {
-  currentUser = { name, color };
-  checked.clear();
-  hideAll();
-  document.getElementById('app').style.display = 'block';
-  document.getElementById('botnav').style.display = 'flex';
-  // topbar
-  const av = document.getElementById('tav');
-  av.textContent = name[0].toUpperCase();
-  av.style.background = color + '18';
-  av.style.color = color;
-  av.style.borderColor = color;
-  document.getElementById('tname').textContent = name;
-  document.getElementById('duel-date-lbl').textContent =
-    new Date().toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' });
-  showTab('today');
-  startAutoRefresh();
+function onCard(name,color){
+  pendingUser={name,color};
+  const av=document.getElementById('pw-av');
+  av.textContent=name[0].toUpperCase();
+  av.style.background=color+'18'; av.style.color=color; av.style.borderColor=color;
+  document.getElementById('pw-title').textContent=name;
+  document.getElementById('pw-inp').value='';
+  document.getElementById('pw-err').textContent='';
+  document.getElementById('pw-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('pw-inp').focus(),150);
 }
 
-function showLoginScreen() {
-  stopAutoRefresh(); currentUser = null; checked.clear();
-  hideAll();
-  document.getElementById('login-screen').style.display = 'flex';
-  renderPlayerGrid();
-}
-
-// ── Tabs ──
-function showTab(t) {
-  ['today','board','manage'].forEach(n => {
-    document.getElementById('pane-' + n).classList.toggle('on', n === t);
-    document.getElementById('nav-' + n).classList.toggle('active', n === t);
-  });
-  renderAll();
-}
-
-// ── Data ──
-async function fetchState() {
-  try {
-    const r = await fetch(API + '?t=' + Date.now());
-    const d = await r.json();
-    return d;
-  } catch(e) { return state; }
-}
-
-async function post(body) {
-  try {
-    await fetch(API, { method: 'POST', body: JSON.stringify(body) });
-  } catch(e) {}
-}
-
-// ── Render ──
-function todayStr() { return new Date().toISOString().slice(0, 10); }
-
-function todayPoints(sessions) {
-  const today = todayStr(), map = {};
-  state.users.forEach(u => { map[u.name] = { pts: 0, checks: 0 }; });
-  sessions.filter(s => s.date === today).forEach(s => {
-    if (!map[s.user]) map[s.user] = { pts: 0, checks: 0 };
-    map[s.user].pts += Number(s.points);
-    map[s.user].checks += 1;
-  });
-  return map;
-}
-
-function totalPoints(sessions) {
-  const map = {};
-  state.users.forEach(u => { map[u.name] = 0; });
-  sessions.forEach(s => {
-    if (!map[s.user]) map[s.user] = 0;
-    map[s.user] += Number(s.points);
-  });
-  return map;
-}
-
-function colorOf(name) {
-  const u = state.users.find(u => u.name === name);
-  return u ? u.color : '#888';
-}
-
-function renderAll() {
-  renderDuelCard();
-  const active = document.querySelector('.tab-pane.on');
-  if (active) {
-    if (active.id === 'pane-today') renderExList();
-    if (active.id === 'pane-board') renderBoard();
-    if (active.id === 'pane-manage') renderManage();
+function checkPw(){
+  const val=document.getElementById('pw-inp').value;
+  const exp=PWS[pendingUser.name]||pendingUser.name.toLowerCase();
+  if(val===exp){
+    closeModal('pw-modal'); enterApp(pendingUser.name,pendingUser.color);
+  } else {
+    document.getElementById('pw-err').textContent='Falsches Passwort ✕';
+    document.getElementById('pw-inp').value='';
+    document.getElementById('pw-inp').focus();
   }
 }
 
-function renderDuelCard() {
-  const tp = todayPoints(state.sessions);
-  const users = state.users;
-  if (!users.length) return;
+function closeModal(id){ document.getElementById(id).style.display='none'; }
 
-  // Build scores row (up to 4 users before wrapping)
-  const scoresHtml = users.map((u, i) => {
-    const s = tp[u.name] || { pts: 0, checks: 0 };
-    return `<div class="score-block">
+// ENTER APP
+function enterApp(name,color){
+  currentUser={name,color}; isMaster=false; checked.clear();
+  const av=document.getElementById('tav');
+  av.textContent=name[0].toUpperCase();
+  av.style.background=color+'18'; av.style.color=color; av.style.borderColor=color;
+  document.getElementById('tname').textContent=name;
+  document.getElementById('admin-badge').style.display='none';
+  document.getElementById('duel-date').textContent=
+    new Date().toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'short'});
+  showScreen('app');
+  document.getElementById('botnav').style.display='flex';
+  showTab('today'); startAutoRefresh();
+}
+
+function doLogout(){
+  stopAutoRefresh(); currentUser=null; isMaster=false; checked.clear(); lockAdmin();
+  showScreen('login-screen'); renderGrid();
+}
+
+// MASTER
+function openMasterModal(){
+  document.getElementById('master-inp').value='';
+  document.getElementById('master-err').textContent='';
+  document.getElementById('master-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('master-inp').focus(),150);
+}
+function checkMaster(){
+  if(document.getElementById('master-inp').value===MASTER){
+    closeModal('master-modal'); isMaster=true;
+    document.getElementById('admin-badge').style.display='inline';
+    document.getElementById('manage-locked').style.display='none';
+    document.getElementById('manage-unlocked').style.display='block';
+    document.getElementById('nav-manage').innerHTML='<span class="bn-ico">⚙️</span>Verwalten';
+    renderManage();
+  } else {
+    document.getElementById('master-err').textContent='Falsches Passwort ✕';
+    document.getElementById('master-inp').value='';
+    document.getElementById('master-inp').focus();
+  }
+}
+function lockAdmin(){
+  isMaster=false;
+  document.getElementById('manage-locked').style.display='block';
+  document.getElementById('manage-unlocked').style.display='none';
+  document.getElementById('admin-badge').style.display='none';
+  document.getElementById('nav-manage').innerHTML='<span class="bn-ico">🔒</span>Verwalten';
+}
+
+// TABS
+function showTab(t){
+  ['today','board','manage'].forEach(n=>{
+    document.getElementById('pane-'+n).classList.toggle('on',n===t);
+    document.getElementById('nav-'+n).classList.toggle('active',n===t);
+  });
+  if(t==='manage'){
+    document.getElementById('manage-locked').style.display=isMaster?'none':'block';
+    document.getElementById('manage-unlocked').style.display=isMaster?'block':'none';
+    if(isMaster) renderManage();
+  }
+  renderAll();
+}
+
+// DATA
+async function fetchState(){
+  try{ const r=await fetch(API+'?t='+Date.now()); return await r.json(); }
+  catch(e){ return state; }
+}
+async function post(body){ try{ await fetch(API,{method:'POST',body:JSON.stringify(body)}); }catch(e){} }
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function todayPts(){
+  const today=todayStr(), m={};
+  state.users.forEach(u=>{m[u.name]={pts:0,checks:0}});
+  state.sessions.filter(s=>s.date===today).forEach(s=>{
+    if(!m[s.user])m[s.user]={pts:0,checks:0};
+    m[s.user].pts+=Number(s.points); m[s.user].checks++;
+  });
+  return m;
+}
+
+function totalPts(){
+  const m={};
+  state.users.forEach(u=>{m[u.name]=0});
+  state.sessions.forEach(s=>{ if(m[s.user]===undefined)m[s.user]=0; m[s.user]+=Number(s.points); });
+  return m;
+}
+
+function colorOf(name){ const u=state.users.find(u=>u.name===name); return u?u.color:'#888'; }
+
+// RENDER
+function renderAll(){
+  renderDuel();
+  const active=document.querySelector('.tab-pane.on');
+  if(!active) return;
+  if(active.id==='pane-today') renderExList();
+  if(active.id==='pane-board') renderBoard();
+}
+
+function renderDuel(){
+  const tp=todayPts(), users=state.users;
+  if(!users.length) return;
+  document.getElementById('scores-row').innerHTML=users.map((u,i)=>
+    `<div class="score-block">
       <div class="sc-name" style="color:${u.color}">${u.name}</div>
-      <div class="sc-pts" style="color:${u.color}">${s.pts}</div>
-      <div class="sc-sub">${s.checks} Satz${s.checks !== 1 ? 'e' : ''}</div>
-    </div>` + (i < users.length - 1 ? '<div class="vs-txt">·</div>' : '');
-  }).join('');
-  document.getElementById('scores-row').innerHTML = scoresHtml;
-
-  // Bar: first user vs rest
-  const u0 = users[0].name;
-  const totalPts = users.reduce((a, u) => a + (tp[u.name] ? tp[u.name].pts : 0), 0);
-  const u0pts = tp[u0] ? tp[u0].pts : 0;
-  const pct = totalPts > 0 ? Math.round((u0pts / totalPts) * 100) : Math.round(100 / users.length);
-  document.getElementById('bar-a').style.width = pct + '%';
-  document.getElementById('bar-a').style.background = colorOf(u0);
-
-  // Message
-  const sorted = users.slice().sort((a, b) => (tp[b.name] ? tp[b.name].pts : 0) - (tp[a.name] ? tp[a.name].pts : 0));
-  const top = sorted[0], second = sorted[1];
-  const topPts = tp[top.name] ? tp[top.name].pts : 0;
-  const secPts = second && tp[second.name] ? tp[second.name].pts : 0;
-  let msg = 'Heute noch keine Sätze';
-  if (totalPts > 0) {
-    if (topPts > secPts) msg = `🔥 ${top.name} führt +${topPts - secPts} Pkt — kommt schon!`;
-    else msg = `⚖️ Gleichstand — wer macht den nächsten Satz?`;
+      <div class="sc-pts" style="color:${u.color}">${tp[u.name]?tp[u.name].pts:0}</div>
+      <div class="sc-sub">${tp[u.name]?tp[u.name].checks:0} Satz${(tp[u.name]&&tp[u.name].checks!==1)?'e':''}</div>
+    </div>`+(i<users.length-1?'<div class="vs-txt">·</div>':'')).join('');
+  const total=users.reduce((a,u)=>a+(tp[u.name]?tp[u.name].pts:0),0);
+  const u0pts=tp[users[0].name]?tp[users[0].name].pts:0;
+  const pct=total>0?Math.round((u0pts/total)*100):Math.round(100/users.length);
+  const bar=document.getElementById('duel-bar');
+  bar.style.width=pct+'%'; bar.style.background=users[0].color;
+  const sorted=users.slice().sort((a,b)=>(tp[b.name]?tp[b.name].pts:0)-(tp[a.name]?tp[a.name].pts:0));
+  const t0=tp[sorted[0].name]?tp[sorted[0].name].pts:0;
+  const t1=sorted[1]&&tp[sorted[1].name]?tp[sorted[1].name].pts:0;
+  let msg='Heute noch keine Sätze — wer fängt an?';
+  if(total>0){
+    if(t0>t1) msg=`🔥 ${sorted[0].name} führt +${t0-t1} Pkt — ${sorted[1]?sorted[1].name+', aufwachen!':'weiter so!'}`;
+    else msg='⚖️ Gleichstand — wer macht den nächsten Satz?';
   }
-  document.getElementById('duel-msg').textContent = msg;
-
-  // Mirror for board tab
-  const bd = document.getElementById('board-duel');
-  if (bd) bd.innerHTML = document.getElementById('duel-card').innerHTML;
+  document.getElementById('duel-msg').textContent=msg;
 }
 
-function renderExList() {
-  const el = document.getElementById('exlist');
-  if (!state.exercises.length) {
-    el.innerHTML = '<p class="empty">Noch keine Übungen.<br>Füge welche unter "Verwalten" hinzu.<br><br>z.B. Liegestütze (30), Klimmzüge, Plank …</p>';
-    document.getElementById('save-btn').disabled = true;
-    return;
+function renderExList(){
+  const el=document.getElementById('exlist');
+  if(!state.exercises.length){
+    el.innerHTML='<p class="empty">Noch keine Übungen.<br>Adde legt sie im Admin-Bereich fest.</p>';
+    document.getElementById('save-btn').disabled=true; return;
   }
-  el.innerHTML = state.exercises.map(e => `
-    <div class="exitem${checked.has(e) ? ' done' : ''}" onclick="toggleEx(this,'${e.replace(/'/g,"\\'")}')">
-      <div class="chkb">
-        <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-          <path d="M1 5L4.5 8.5L11 1.5" stroke="#040a06" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
+  el.innerHTML=state.exercises.map(e=>`
+    <div class="exitem${checked.has(e)?' done':''}" onclick="toggleEx('${e.replace(/'/g,"\\'")}')">
+      <div class="chkb"><svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+        <path d="M1 5L4.5 8.5L11 1.5" stroke="#040a06" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg></div>
       <span class="exname">${e}</span>
-      <span class="expill">${checked.has(e) ? '+' + PPT + ' ✓' : '+' + PPT + ' Pkt.'}</span>
+      <span class="expill">${checked.has(e)?'+'+PPT+' ✓':'+'+PPT+' Pkt.'}</span>
     </div>`).join('');
-  document.getElementById('save-btn').disabled = checked.size === 0;
+  document.getElementById('save-btn').disabled=checked.size===0;
 }
 
-function toggleEx(el, e) { checked.has(e) ? checked.delete(e) : checked.add(e); renderExList(); }
+function toggleEx(e){ checked.has(e)?checked.delete(e):checked.add(e); renderExList(); }
 
-async function saveChecked() {
-  if (!checked.size || !currentUser) return;
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = 'Speichere…';
-  const exs = [...checked];
-  // Post each exercise as individual session row
-  for (const ex of exs) {
-    await post({ action: 'checkExercise', user: currentUser.name, exercise: ex });
-    // Optimistic local update
-    state.sessions.push({ user: currentUser.name, date: todayStr(), exercise: ex, points: PPT, timestamp: new Date().toISOString() });
+async function saveChecked(){
+  if(!checked.size||!currentUser) return;
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='Speichere…';
+  const exs=[...checked];
+  for(const ex of exs){
+    await post({action:'checkExercise',user:currentUser.name,exercise:ex});
+    state.sessions.push({user:currentUser.name,date:todayStr(),exercise:ex,points:PPT,timestamp:new Date().toISOString()});
   }
-  const pts = exs.length * PPT;
-  checked.clear();
-  renderAll();
-  btn.textContent = 'Sätze speichern →';
-  showToast('+' + pts + ' Punkte für ' + currentUser.name + ' 💪');
-  // Re-fetch to confirm
-  setTimeout(async () => { state = await fetchState(); renderAll(); }, 1500);
+  const pts=exs.length*PPT;
+  checked.clear(); btn.textContent='Sätze speichern →';
+  renderAll(); showToast('+'+pts+' Punkte für '+currentUser.name+' 💪');
+  setTimeout(async()=>{ state=await fetchState(); state.users.forEach(u=>{if(u.password)PWS[u.name]=u.password;}); renderAll(); },1500);
 }
 
-function renderBoard() {
-  const tp = todayPoints(state.sessions);
-  const total = totalPoints(state.sessions);
-  const sorted = state.users.slice().sort((a, b) => total[b.name] - total[a.name]);
-  const medals = ['🥇','🥈','🥉'];
-  document.getElementById('lb-list').innerHTML = sorted.map((u, i) => `
-    <div class="lb-row${i === 0 ? ' top' : ''}" style="${i === 0 ? 'border-color:' + u.color + '55' : ''}">
-      <span class="lb-rank" style="color:${u.color}">${medals[i] || (i + 1) + '.'}</span>
+function renderBoard(){
+  const tp=todayPts(), total=totalPts();
+  const sorted=state.users.slice().sort((a,b)=>total[b.name]-total[a.name]);
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('lb-list').innerHTML=sorted.map((u,i)=>`
+    <div class="lb-row" style="${i===0?'border-color:'+u.color+'55':''}">
+      <span class="lb-rank" style="color:${u.color}">${medals[i]||(i+1)+'.'}</span>
       <div style="flex:1">
         <div class="lb-name" style="color:${u.color}">${u.name}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">heute: ${tp[u.name] ? tp[u.name].pts : 0} Pkt.</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">heute: ${tp[u.name]?tp[u.name].pts:0} Pkt.</div>
       </div>
       <span class="lb-pts" style="color:${u.color}">${total[u.name]} Pkt.</span>
     </div>`).join('');
-
-  // History by date
-  const grouped = {};
-  [...state.sessions].forEach(s => {
-    if (!grouped[s.date]) grouped[s.date] = {};
-    if (!grouped[s.date][s.user]) grouped[s.date][s.user] = { pts: 0, exs: [] };
-    grouped[s.date][s.user].pts += Number(s.points);
-    if (!grouped[s.date][s.user].exs.includes(s.exercise)) grouped[s.date][s.user].exs.push(s.exercise);
+  const grouped={};
+  state.sessions.forEach(s=>{
+    if(!grouped[s.date])grouped[s.date]={};
+    if(!grouped[s.date][s.user])grouped[s.date][s.user]={pts:0};
+    grouped[s.date][s.user].pts+=Number(s.points);
   });
-  const dates = Object.keys(grouped).sort((a,b) => b.localeCompare(a)).slice(0, 14);
-  if (!dates.length) { document.getElementById('hist-list').innerHTML = '<p class="empty">Noch kein Verlauf.</p>'; return; }
-  document.getElementById('hist-list').innerHTML = dates.map(date => {
-    const d = new Date(date).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-    const entries = Object.entries(grouped[date])
-      .sort((a,b) => b[1].pts - a[1].pts)
-      .map(([name, v]) => `<span style="color:${colorOf(name)};font-weight:600">${name}</span>&nbsp;${v.pts}Pkt.`)
-      .join(' &nbsp;·&nbsp; ');
-    return `<div class="hist-row"><span class="hist-date">${d}</span><span class="hist-body">${entries}</span></div>`;
-  }).join('');
+  const dates=Object.keys(grouped).sort((a,b)=>b.localeCompare(a)).slice(0,14);
+  document.getElementById('hist-list').innerHTML=dates.length
+    ?dates.map(date=>{
+        const d=new Date(date).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'});
+        const entries=Object.entries(grouped[date]).sort((a,b)=>b[1].pts-a[1].pts)
+          .map(([n,v])=>`<span style="color:${colorOf(n)};font-weight:600">${n}</span>&nbsp;${v.pts}Pkt.`).join(' · ');
+        return `<div class="hist-row"><span class="hist-date">${d}</span><span class="hist-body">${entries}</span></div>`;
+      }).join('')
+    :'<p class="empty">Noch kein Verlauf.</p>';
 }
 
-function renderManage() {
-  // Exercises
-  document.getElementById('ex-manage-list').innerHTML = state.exercises.length
-    ? state.exercises.map(e => `
-        <div class="mgmt-row">
-          <span class="mgmt-name">${e}</span>
-          <button class="del-btn" onclick="removeExercise('${e.replace(/'/g,"\\'")}')">✕</button>
-        </div>`).join('')
-    : '<p class="empty">Noch keine Übungen.</p>';
-  // Users
-  document.getElementById('user-manage-list').innerHTML = state.users.length
-    ? state.users.map(u => `
-        <div class="mgmt-row">
-          <div class="user-color-dot" style="background:${u.color}"></div>
-          <span class="mgmt-name">${u.name}</span>
-          <button class="del-btn" onclick="removeUser('${u.name}')">✕</button>
-        </div>`).join('')
-    : '<p class="empty">Noch keine Spieler.</p>';
+function renderManage(){
+  document.getElementById('ex-manage-list').innerHTML=state.exercises.length
+    ?state.exercises.map(e=>`<div class="mgmt-row"><span class="mgmt-name">${e}</span><button class="del-btn" onclick="removeExercise(${JSON.stringify(e)})">✕</button></div>`).join('')
+    :'<p class="empty">Noch keine Übungen.</p>';
+  document.getElementById('user-manage-list').innerHTML=state.users.length
+    ?state.users.map(u=>`<div class="mgmt-row"><div class="dot" style="background:${u.color}"></div><span class="mgmt-name">${u.name}</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)">pw: ${u.password||PWS[u.name]||u.name.toLowerCase()}</span><button class="del-btn" onclick="removeUser(${JSON.stringify(u.name)})">✕</button></div>`).join('')
+    :'<p class="empty">Noch keine Spieler.</p>';
 }
 
-async function addExercise() {
-  const inp = document.getElementById('new-ex'), v = inp.value.trim();
-  if (!v) return;
-  inp.value = '';
-  await post({ action: 'addExercise', name: v });
-  state.exercises.push(v);
-  renderManage(); renderExList();
-  showToast('Übung hinzugefügt ✓');
+async function addExercise(){
+  const inp=document.getElementById('new-ex'),v=inp.value.trim();
+  if(!v) return; inp.value='';
+  await post({action:'addExercise',name:v});
+  if(!state.exercises.includes(v)) state.exercises.push(v);
+  renderManage(); renderExList(); showToast('Übung hinzugefügt ✓');
 }
 
-async function removeExercise(name) {
-  await post({ action: 'removeExercise', name });
-  state.exercises = state.exercises.filter(e => e !== name);
-  checked.delete(name);
-  renderManage(); renderExList();
+async function removeExercise(name){
+  await post({action:'removeExercise',name});
+  state.exercises=state.exercises.filter(e=>e!==name);
+  checked.delete(name); renderManage(); renderExList();
 }
 
-async function addUser() {
-  const name = document.getElementById('new-user').value.trim();
-  const color = document.getElementById('new-user-color').value;
-  if (!name) return;
-  document.getElementById('new-user').value = '';
-  await post({ action: 'addUser', name, color });
-  state.users.push({ name, color });
-  renderManage();
-  showToast(name + ' hinzugefügt ✓');
+function openNuModal(){
+  document.getElementById('nu-name').value='';
+  document.getElementById('nu-pw').value='';
+  document.getElementById('nu-color').value='#22c55e';
+  document.getElementById('nu-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('nu-name').focus(),150);
 }
 
-async function removeUser(name) {
-  await post({ action: 'removeUser', name });
-  state.users = state.users.filter(u => u.name !== name);
+async function confirmAddUser(){
+  const name=document.getElementById('nu-name').value.trim();
+  const pw=document.getElementById('nu-pw').value.trim();
+  const color=document.getElementById('nu-color').value;
+  if(!name||!pw){ showToast('Name und Passwort eingeben!'); return; }
+  closeModal('nu-modal');
+  await post({action:'addUser',name,color,password:pw});
+  if(!state.users.find(u=>u.name===name)) state.users.push({name,color,password:pw});
+  PWS[name]=pw;
+  renderManage(); showToast(name+' hinzugefügt ✓');
+}
+
+async function removeUser(name){
+  await post({action:'removeUser',name});
+  state.users=state.users.filter(u=>u.name!==name);
   renderManage();
 }
 
-// ── Auto-refresh ──
-function startAutoRefresh() {
+function startAutoRefresh(){
   stopAutoRefresh();
-  refreshTimer = setInterval(async () => {
-    const dot = document.getElementById('sync-dot');
-    dot.classList.add('off');
-    state = await fetchState();
-    dot.classList.remove('off');
+  refreshTimer=setInterval(async()=>{
+    const dot=document.getElementById('sync-dot');
+    if(dot)dot.classList.add('off');
+    const fresh=await fetchState();
+    fresh.users.forEach(u=>{if(u.password)PWS[u.name]=u.password;});
+    state=fresh;
+    if(dot)dot.classList.remove('off');
     renderAll();
-  }, 15000);
+  },15000);
 }
+function stopAutoRefresh(){ if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;} }
 
-function stopAutoRefresh() { if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; } }
-
-// ── Utils ──
-function hideAll() {
-  ['cfg-screen','login-screen','app'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+function showScreen(id){
+  ['cfg-screen','login-screen','app'].forEach(s=>{
+    const el=document.getElementById(s); if(el)el.style.display='none';
   });
-  document.getElementById('botnav').style.display = 'none';
+  document.getElementById('botnav').style.display='none';
+  const t=document.getElementById(id);
+  if(t)t.style.display=(id==='app')?'block':'flex';
 }
 
-function showEl(id) { document.getElementById(id).style.display = id === 'cfg-screen' ? 'flex' : 'flex'; }
-
-function showToast(m) {
-  const t = document.getElementById('toast'); t.textContent = m;
-  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600);
+function showToast(m){
+  const t=document.getElementById('toast'); t.textContent=m;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600);
 }
 </script>
 </body>
